@@ -5,19 +5,19 @@
 
 <style>
   :root {
-    --paper: #FBF1EF;
+    --paper: #FDF8F6;
     --paper-raised: #FFFFFF;
-    --ink: #241019;
-    --ink-soft: #5C3C4B;
+    --ink: #3B2430;
+    --ink-soft: #7B5A68;
     --magenta: #D6007F;
-    --magenta-deep: #94004F;
-    --magenta-ink: #7A0044;
-    --rose-surface: #F6DCE4;
-    --rose-surface-strong: #F0C7D6;
-    --gold: #B98A44;
-    --line: rgba(36, 16, 25, 0.14);
-    --line-strong: rgba(36, 16, 25, 0.22);
-    --shadow: 0 18px 40px -20px rgba(148, 0, 79, 0.35);
+    --magenta-deep: #AE1E6B;
+    --magenta-ink: #8E1457;
+    --rose-surface: #FAEAF0;
+    --rose-surface-strong: #F4D8E3;
+    --gold: #C6A06A;
+    --line: rgba(59, 36, 48, 0.10);
+    --line-strong: rgba(59, 36, 48, 0.16);
+    --shadow: 0 16px 34px -22px rgba(148, 0, 79, 0.22);
     --mono: "SF Mono", "IBM Plex Mono", ui-monospace, monospace;
 
     --font-display: "Fraunces", "Iowan Old Style", "Palatino Linotype", serif;
@@ -30,16 +30,16 @@
       --paper: #1B0A13;
       --paper-raised: #26101C;
       --ink: #F8E9EF;
-      --ink-soft: #D9AFC2;
+      --ink-soft: #E0B9CB;
       --magenta: #FF4FA0;
       --magenta-deep: #FF7EB6;
       --magenta-ink: #FFD3E9;
       --rose-surface: #33141F;
       --rose-surface-strong: #3D1826;
       --gold: #DDB06D;
-      --line: rgba(248, 233, 239, 0.14);
-      --line-strong: rgba(248, 233, 239, 0.24);
-      --shadow: 0 18px 46px -18px rgba(0, 0, 0, 0.6);
+      --line: rgba(248, 233, 239, 0.10);
+      --line-strong: rgba(248, 233, 239, 0.18);
+      --shadow: 0 16px 38px -20px rgba(0, 0, 0, 0.5);
     }
   }
 
@@ -47,16 +47,16 @@
     --paper: #1B0A13;
     --paper-raised: #26101C;
     --ink: #F8E9EF;
-    --ink-soft: #D9AFC2;
+    --ink-soft: #E0B9CB;
     --magenta: #FF4FA0;
     --magenta-deep: #FF7EB6;
     --magenta-ink: #FFD3E9;
     --rose-surface: #33141F;
     --rose-surface-strong: #3D1826;
     --gold: #DDB06D;
-    --line: rgba(248, 233, 239, 0.14);
-    --line-strong: rgba(248, 233, 239, 0.24);
-    --shadow: 0 18px 46px -18px rgba(0, 0, 0, 0.6);
+    --line: rgba(248, 233, 239, 0.10);
+    --line-strong: rgba(248, 233, 239, 0.18);
+    --shadow: 0 16px 38px -20px rgba(0, 0, 0, 0.5);
   }
 
   * { box-sizing: border-box; }
@@ -634,17 +634,17 @@
       <div class="token-card">
         <p class="tlabel">Sombra · elevação</p>
         <div class="shadow-demo"></div>
-        <code>0 18px 40px -20px rgba(148,0,79,.35)</code>
+        <code>0 16px 34px -22px rgba(148,0,79,.22)</code>
       </div>
       <div class="token-card">
         <p class="tlabel">Linha · padrão</p>
         <div class="radius-demo r-16" style="background:transparent; border-color:var(--line);"></div>
-        <code>rgba(36,16,25,.14)</code>
+        <code>rgba(59,36,48,.10)</code>
       </div>
       <div class="token-card">
         <p class="tlabel">Linha · forte</p>
         <div class="radius-demo r-16" style="background:transparent; border-color:var(--line-strong);"></div>
-        <code>rgba(36,16,25,.22)</code>
+        <code>rgba(59,36,48,.16)</code>
       </div>
     </div>
   </section>
@@ -655,16 +655,16 @@
 <script>
   (function () {
     var colors = [
-      { name: "Papel", v: "--paper", light: "#FBF1EF", dark: "#1B0A13" },
+      { name: "Papel", v: "--paper", light: "#FDF8F6", dark: "#1B0A13" },
       { name: "Papel Elevado", v: "--paper-raised", light: "#FFFFFF", dark: "#26101C" },
-      { name: "Tinta", v: "--ink", light: "#241019", dark: "#F8E9EF" },
-      { name: "Tinta Suave", v: "--ink-soft", light: "#5C3C4B", dark: "#D9AFC2" },
+      { name: "Tinta", v: "--ink", light: "#3B2430", dark: "#F8E9EF" },
+      { name: "Tinta Suave", v: "--ink-soft", light: "#7B5A68", dark: "#E0B9CB" },
       { name: "Magenta", v: "--magenta", light: "#D6007F", dark: "#FF4FA0" },
-      { name: "Magenta Profundo", v: "--magenta-deep", light: "#94004F", dark: "#FF7EB6" },
-      { name: "Magenta Tinta", v: "--magenta-ink", light: "#7A0044", dark: "#FFD3E9" },
-      { name: "Superfície Rosa", v: "--rose-surface", light: "#F6DCE4", dark: "#33141F" },
-      { name: "Superfície Rosa Forte", v: "--rose-surface-strong", light: "#F0C7D6", dark: "#3D1826" },
-      { name: "Dourado", v: "--gold", light: "#B98A44", dark: "#DDB06D" }
+      { name: "Magenta Profundo", v: "--magenta-deep", light: "#AE1E6B", dark: "#FF7EB6" },
+      { name: "Magenta Tinta", v: "--magenta-ink", light: "#8E1457", dark: "#FFD3E9" },
+      { name: "Superfície Rosa", v: "--rose-surface", light: "#FAEAF0", dark: "#33141F" },
+      { name: "Superfície Rosa Forte", v: "--rose-surface-strong", light: "#F4D8E3", dark: "#3D1826" },
+      { name: "Dourado", v: "--gold", light: "#C6A06A", dark: "#DDB06D" }
     ];
     var grid = document.getElementById('swatch-grid');
     colors.forEach(function (c) {
