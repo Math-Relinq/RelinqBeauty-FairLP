@@ -1,3 +1,4 @@
+/* ---------- Design tokens (cores, fontes, sombra) ---------- */
 :root {
   --paper: #FBF1EF;
   --paper-raised: #FFFFFF;
@@ -18,6 +19,7 @@
   --font-body: "Manrope", "Segoe UI", system-ui, sans-serif;
 }
 
+/* ---------- Tema escuro (automático via SO + forçado via [data-theme]) ---------- */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     --paper: #1B0A13;
@@ -52,7 +54,12 @@
   --shadow: 0 18px 46px -18px rgba(0, 0, 0, 0.6);
 }
 
+/* ---------- Reset & base ---------- */
 * { box-sizing: border-box; }
+
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+}
 
 body {
   margin: 0;
@@ -83,13 +90,134 @@ a { color: inherit; }
 
 /* ---------- Hero ---------- */
 .hero {
-  padding: 3.2rem 0 2.4rem;
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   text-align: center;
+  background: var(--paper);
+  overflow: hidden;
+}
+
+/* imagem retrato: ocupa a largura toda no mobile, vira um cartão centrado no desktop */
+.hero-media {
+  position: relative;
+  flex: 0 0 auto;
+  width: 100%;
+  height: 58vh;
+  height: 58svh;
+  min-height: 340px;
+  max-height: 600px;
+  overflow: hidden;
+}
+
+.hero-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 22%;
+  display: block;
+}
+
+/* gradient na parte inferior: a imagem se dissolve no fundo da página */
+.hero-media::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 46%;
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--paper) 0%, transparent) 0%,
+    color-mix(in srgb, var(--paper) 42%, transparent) 46%,
+    color-mix(in srgb, var(--paper) 84%, transparent) 75%,
+    var(--paper) 100%
+  );
+  pointer-events: none;
+}
+
+/* o texto fica logo abaixo da imagem, sem sobrepô-la; a seta vai pro pé da tela */
+.hero-copy {
+  position: relative;
+  z-index: 2;
+  flex: 1 1 auto;
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: clamp(1.6rem, 4.5vh, 3rem) 1.4rem calc(1.5rem + env(safe-area-inset-bottom));
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
+.hero h1 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-style: italic;
+  font-size: clamp(2.3rem, 8vw, 3.4rem);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  max-width: 16ch;
+  margin: 0;
+  text-wrap: balance;
+  color: var(--ink);
+}
+
+/* palavras-chave destacadas — mesmo tratamento de ênfase do guia (magenta + itálico) */
+.hero h1 em {
+  color: var(--magenta);
+  font-style: italic;
+}
+
+/* seta que rola para a próxima seção — ancorada no pé da tela */
+.scroll-cue {
+  margin-top: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  padding: 0;
+  border: 1px solid var(--line-strong);
+  border-radius: 100px;
+  background: var(--paper-raised);
+  color: var(--magenta);
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  transition: transform 0.25s ease, color 0.25s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.scroll-cue:hover,
+.scroll-cue:focus-visible {
+  transform: translateY(3px);
+  color: var(--magenta-deep);
+}
+.scroll-cue:focus-visible { outline: 2px solid var(--gold); outline-offset: 4px; }
+
+.scroll-cue .arrow { display: inline-flex; animation: bob 1.8s ease-in-out infinite; }
+@keyframes bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(5px); }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .hero-copy > * { animation: hero-in 0.7s cubic-bezier(0.16, 1, 0.3, 1) both; }
+  .hero-copy > *:nth-child(1) { animation-delay: 0.08s; }
+  .hero-copy > *:nth-child(2) { animation-delay: 0.22s; }
+}
+@keyframes hero-in {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .scroll-cue .arrow { animation: none; }
+}
+
+/* ---------- Rótulos e assinatura à mão (usados nas seções abaixo) ---------- */
 .eyebrow {
   font-family: var(--font-body);
   font-weight: 800;
@@ -111,64 +239,6 @@ a { color: inherit; }
   color: var(--magenta);
   margin: 0 0 0.3rem;
   transform: rotate(-2deg);
-}
-
-.hero h1 {
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-style: italic;
-  font-size: clamp(2.3rem, 8vw, 3.4rem);
-  line-height: 1.08;
-  letter-spacing: -0.01em;
-  margin: 0 0 1.3rem;
-  text-wrap: balance;
-  color: var(--ink);
-}
-
-.hero h1 em {
-  color: var(--magenta);
-  font-style: italic;
-}
-
-.hero p.sub {
-  font-size: 1.05rem;
-  line-height: 1.65;
-  color: var(--ink-soft);
-  max-width: 32rem;
-  margin: 0 0 2.2rem;
-}
-
-.hero-mark {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: var(--ink-soft);
-}
-
-.hero-mark .spark { color: var(--gold); width: 1.1em; height: 1.1em; }
-
-.scroll-cue {
-  margin-top: 2.6rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.4rem;
-  font-size: 0.78rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--magenta-ink);
-  opacity: 0.75;
-}
-.scroll-cue .arrow { animation: bob 1.8s ease-in-out infinite; }
-@keyframes bob {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(6px); }
-}
-@media (prefers-reduced-motion: reduce) {
-  .scroll-cue .arrow { animation: none; }
 }
 
 /* ---------- Section shared ---------- */
@@ -207,16 +277,23 @@ section { padding: 2.6rem 0; }
   box-shadow: var(--shadow);
   opacity: 0;
   transform: translateY(14px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
+  transition: opacity 0.6s ease, transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease, border-color 0.35s ease;
 }
 .menu-card.is-visible { opacity: 1; transform: translateY(0); }
 @media (prefers-reduced-motion: reduce) {
   .menu-card { opacity: 1; transform: none; transition: none; }
 }
+@media (hover: hover) {
+  .menu-card.is-visible:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 26px 50px -20px rgba(148, 0, 79, 0.42);
+    border-color: var(--line-strong);
+  }
+}
 
 .menu-card-head {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   gap: 0.6rem;
   padding-bottom: 0.85rem;
   margin-bottom: 0.95rem;
@@ -235,11 +312,15 @@ section { padding: 2.6rem 0; }
 }
 
 .menu-card-head span.tag {
-  font-size: 0.68rem;
+  font-size: 0.66rem;
   font-weight: 800;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--magenta);
+  background: var(--rose-surface);
+  border: 1px solid var(--line-strong);
+  padding: 0.28rem 0.65rem;
+  border-radius: 100px;
   margin-left: auto;
   white-space: nowrap;
 }
@@ -268,6 +349,10 @@ section { padding: 2.6rem 0; }
   background: var(--magenta);
   margin-top: 0.55em;
   flex-shrink: 0;
+  transition: transform 0.25s ease;
+}
+@media (hover: hover) {
+  .menu-list li:hover .dot { transform: scale(1.6); }
 }
 
 .menu-list li strong { color: var(--ink); font-weight: 700; }
@@ -317,6 +402,7 @@ section { padding: 2.6rem 0; }
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 .cta-btn:hover { transform: translateY(-2px); box-shadow: 0 18px 34px -12px rgba(148, 0, 79, 0.6); }
+.cta-btn:active { transform: translateY(0) scale(0.97); box-shadow: 0 10px 22px -12px rgba(148, 0, 79, 0.5); }
 .cta-btn:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
 
 .micro {
@@ -339,6 +425,12 @@ section { padding: 2.6rem 0; }
   background: color-mix(in srgb, var(--paper) 82%, transparent);
   backdrop-filter: blur(10px);
   border-top: 1px solid var(--line);
+  transform: translateY(120%);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.sticky-cta.is-visible { transform: translateY(0); }
+@media (prefers-reduced-motion: reduce) {
+  .sticky-cta { transition: none; }
 }
 
 .sticky-cta .label {
@@ -354,6 +446,7 @@ section { padding: 2.6rem 0; }
   font-size: 0.9rem;
 }
 
+/* ---------- Rodapé ---------- */
 footer.brand {
   text-align: center;
   padding: 2rem 0 0.5rem;
@@ -364,7 +457,29 @@ footer.brand {
   opacity: 0.6;
 }
 
+/* ---------- Responsivo (tablet e desktop) ---------- */
 @media (min-width: 640px) {
   .page { padding-left: 2rem; padding-right: 2rem; }
   .menu { display: grid; grid-template-columns: 1fr 1fr; }
+
+  /* a imagem retrato vira um cartão centrado, respeitando a proporção */
+  .hero-media {
+    width: min(84vw, 26rem);
+    height: min(66svh, 32rem);
+    max-height: 32rem;
+    margin-top: clamp(1.5rem, 4vh, 2.75rem);
+    border-radius: 20px;
+    box-shadow: var(--shadow);
+  }
+  .hero-media img { object-position: center 28%; }
+  .hero-copy { padding-top: clamp(1.8rem, 4vh, 2.75rem); }
+  /* em telas altas, o título centra no espaço livre e a seta fica no pé */
+  .hero h1 { margin-top: auto; }
+}
+
+@media (min-width: 900px) {
+  .page { max-width: 760px; }
+  .menu { gap: 1.4rem; }
+  .hero-media { width: min(46vw, 28rem); height: min(68svh, 34rem); max-height: 34rem; }
+  section { padding: 3.2rem 0; }
 }

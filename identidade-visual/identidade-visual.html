@@ -1,0 +1,721 @@
+<title>Relinq Beauty</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Caveat:wght@600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --paper: #FBF1EF;
+    --paper-raised: #FFFFFF;
+    --ink: #241019;
+    --ink-soft: #5C3C4B;
+    --magenta: #D6007F;
+    --magenta-deep: #94004F;
+    --magenta-ink: #7A0044;
+    --rose-surface: #F6DCE4;
+    --rose-surface-strong: #F0C7D6;
+    --gold: #B98A44;
+    --line: rgba(36, 16, 25, 0.14);
+    --line-strong: rgba(36, 16, 25, 0.22);
+    --shadow: 0 18px 40px -20px rgba(148, 0, 79, 0.35);
+    --mono: "SF Mono", "IBM Plex Mono", ui-monospace, monospace;
+
+    --font-display: "Fraunces", "Iowan Old Style", "Palatino Linotype", serif;
+    --font-script: "Caveat", "Segoe Script", cursive;
+    --font-body: "Manrope", "Segoe UI", system-ui, sans-serif;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #1B0A13;
+      --paper-raised: #26101C;
+      --ink: #F8E9EF;
+      --ink-soft: #D9AFC2;
+      --magenta: #FF4FA0;
+      --magenta-deep: #FF7EB6;
+      --magenta-ink: #FFD3E9;
+      --rose-surface: #33141F;
+      --rose-surface-strong: #3D1826;
+      --gold: #DDB06D;
+      --line: rgba(248, 233, 239, 0.14);
+      --line-strong: rgba(248, 233, 239, 0.24);
+      --shadow: 0 18px 46px -18px rgba(0, 0, 0, 0.6);
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --paper: #1B0A13;
+    --paper-raised: #26101C;
+    --ink: #F8E9EF;
+    --ink-soft: #D9AFC2;
+    --magenta: #FF4FA0;
+    --magenta-deep: #FF7EB6;
+    --magenta-ink: #FFD3E9;
+    --rose-surface: #33141F;
+    --rose-surface-strong: #3D1826;
+    --gold: #DDB06D;
+    --line: rgba(248, 233, 239, 0.14);
+    --line-strong: rgba(248, 233, 239, 0.24);
+    --shadow: 0 18px 46px -18px rgba(0, 0, 0, 0.6);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap {
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 0 1.5rem 6rem;
+  }
+
+  a { color: inherit; }
+
+  /* ---------- Top bar ---------- */
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.9rem 1.5rem;
+    background: color-mix(in srgb, var(--paper) 88%, transparent);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .topbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 600;
+    font-size: 1.05rem;
+  }
+  .topbar-brand .spark { color: var(--gold); width: 1em; height: 1em; }
+  .spark svg { width: 100%; height: 100%; display: block; }
+
+  .topbar-nav {
+    display: flex;
+    gap: 1.3rem;
+    font-size: 0.82rem;
+    font-weight: 700;
+  }
+  .topbar-nav a {
+    text-decoration: none;
+    color: var(--ink-soft);
+    white-space: nowrap;
+  }
+  .topbar-nav a:hover { color: var(--magenta); }
+
+  .theme-toggle {
+    display: flex;
+    gap: 0.2rem;
+    background: var(--rose-surface);
+    border: 1px solid var(--line-strong);
+    border-radius: 100px;
+    padding: 0.2rem;
+    flex-shrink: 0;
+  }
+  .theme-toggle button {
+    border: none;
+    background: transparent;
+    color: var(--ink-soft);
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: 0.72rem;
+    letter-spacing: 0.03em;
+    padding: 0.4rem 0.7rem;
+    border-radius: 100px;
+    cursor: pointer;
+  }
+  .theme-toggle button.active {
+    background: var(--magenta);
+    color: #FFF6FA;
+  }
+  .theme-toggle button:focus-visible { outline: 2px solid var(--gold); outline-offset: 1px; }
+
+  @media (max-width: 640px) {
+    .topbar-nav { display: none; }
+  }
+
+  /* ---------- Intro ---------- */
+  .intro {
+    padding: 3.4rem 0 2.6rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .eyebrow {
+    display: inline-block;
+    font-family: var(--font-body);
+    font-weight: 800;
+    font-size: 0.72rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--magenta);
+    background: var(--rose-surface);
+    border: 1px solid var(--line-strong);
+    padding: 0.5rem 1rem;
+    border-radius: 100px;
+    margin-bottom: 1.4rem;
+  }
+  .script-line {
+    font-family: var(--font-script);
+    font-weight: 700;
+    font-size: clamp(1.5rem, 5vw, 1.9rem);
+    color: var(--magenta);
+    margin: 0 0 0.2rem;
+    transform: rotate(-2deg);
+    display: inline-block;
+  }
+  .intro h1 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-style: italic;
+    font-size: clamp(2rem, 6vw, 2.9rem);
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    margin: 0 0 1.1rem;
+    text-wrap: balance;
+  }
+  .intro h1 em { color: var(--magenta); font-style: italic; }
+  .intro p.sub {
+    font-size: 1.02rem;
+    line-height: 1.65;
+    color: var(--ink-soft);
+    max-width: 42rem;
+    margin: 0;
+  }
+  .intro p.sub code {
+    font-family: var(--mono);
+    font-size: 0.88em;
+    background: var(--rose-surface);
+    padding: 0.1em 0.4em;
+    border-radius: 5px;
+  }
+
+  /* ---------- Section shared ---------- */
+  section.block { padding: 3.2rem 0; border-bottom: 1px solid var(--line); scroll-margin-top: 4.5rem; }
+  section.block:last-of-type { border-bottom: none; }
+
+  .block-head { margin-bottom: 2rem; }
+  .block-head .kicker {
+    font-family: var(--font-body);
+    font-weight: 800;
+    font-size: 0.7rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin: 0 0 0.5rem;
+  }
+  .block-head h2 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-style: italic;
+    font-size: clamp(1.5rem, 4vw, 1.9rem);
+    margin: 0 0 0.5rem;
+  }
+  .block-head p {
+    color: var(--ink-soft);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    max-width: 38rem;
+    margin: 0;
+  }
+
+  /* ---------- Color swatches ---------- */
+  .swatch-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+    gap: 1rem;
+  }
+  .swatch {
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    overflow: hidden;
+    background: var(--paper-raised);
+    box-shadow: var(--shadow);
+  }
+  .swatch-fill {
+    height: 76px;
+    border-bottom: 1px solid var(--line);
+  }
+  .swatch-body { padding: 0.75rem 0.9rem 0.9rem; }
+  .swatch-name {
+    font-weight: 700;
+    font-size: 0.86rem;
+    margin: 0 0 0.15rem;
+  }
+  .swatch-var {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--magenta);
+    margin: 0 0 0.35rem;
+    word-break: break-all;
+  }
+  .swatch-hex {
+    font-family: var(--mono);
+    font-size: 0.76rem;
+    color: var(--ink-soft);
+    display: flex;
+    justify-content: space-between;
+    gap: 0.4rem;
+  }
+
+  /* ---------- Typography specimens ---------- */
+  .type-row {
+    display: flex;
+    flex-direction: column;
+    gap: 1.6rem;
+  }
+  .specimen {
+    display: grid;
+    grid-template-columns: 9rem 1fr;
+    gap: 1.2rem;
+    align-items: baseline;
+    padding: 1.3rem 0;
+    border-top: 1px solid var(--line);
+  }
+  .specimen:first-child { border-top: none; padding-top: 0; }
+  .specimen-meta {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--ink-soft);
+    line-height: 1.6;
+  }
+  .specimen-meta strong { display: block; color: var(--ink); font-family: var(--font-body); font-size: 0.82rem; margin-bottom: 0.2rem; }
+  .specimen-sample.script {
+    font-family: var(--font-script);
+    font-weight: 700;
+    color: var(--magenta);
+    font-size: clamp(1.6rem, 4vw, 2.1rem);
+  }
+  .specimen-sample.display {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 600;
+    font-size: clamp(1.5rem, 4vw, 2rem);
+    text-wrap: balance;
+  }
+  .specimen-sample.display em { color: var(--magenta); font-style: italic; }
+  .specimen-sample.body-text {
+    font-family: var(--font-body);
+    font-size: 1rem;
+    line-height: 1.65;
+    color: var(--ink-soft);
+    max-width: 34rem;
+  }
+  .weight-line { font-family: var(--font-body); font-size: 1rem; margin: 0.15rem 0; }
+
+  /* ---------- Components ---------- */
+  .comp-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.4rem;
+  }
+  @media (max-width: 640px) { .comp-grid { grid-template-columns: 1fr; } }
+
+  .comp-card {
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    background: var(--paper-raised);
+    overflow: hidden;
+  }
+  .comp-label {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--ink-soft);
+    padding: 0.7rem 1rem;
+    border-bottom: 1px solid var(--line);
+    background: var(--rose-surface);
+  }
+  .comp-stage {
+    padding: 1.6rem 1.3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 90px;
+  }
+
+  .tag-pill {
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--magenta);
+  }
+
+  .mini-card {
+    width: 100%;
+    background: var(--paper-raised);
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    padding: 1.2rem 1.3rem 1.3rem;
+    box-shadow: var(--shadow);
+  }
+  .mini-card-head {
+    display: flex;
+    align-items: baseline;
+    gap: 0.55rem;
+    padding-bottom: 0.7rem;
+    margin-bottom: 0.7rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .mini-card-head .spark { color: var(--gold); flex-shrink: 0; width: 1.05em; height: 1.05em; }
+  .mini-card-head h3 {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 600;
+    font-size: 1.08rem;
+    margin: 0;
+  }
+  .mini-card-head span.tag { margin-left: auto; }
+  .mini-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.4rem; }
+  .mini-list li { display: flex; gap: 0.55rem; align-items: flex-start; font-size: 0.86rem; line-height: 1.45; color: var(--ink-soft); }
+  .mini-list li .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--magenta); margin-top: 0.5em; flex-shrink: 0; }
+  .mini-list li strong { color: var(--ink); font-weight: 700; }
+
+  .cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--magenta);
+    color: #FFF6FA;
+    font-family: var(--font-body);
+    font-weight: 800;
+    font-size: 0.95rem;
+    padding: 0.85rem 1.6rem;
+    border-radius: 100px;
+    text-decoration: none;
+    border: 1px solid var(--magenta-deep);
+    box-shadow: 0 14px 30px -12px rgba(148, 0, 79, 0.55);
+  }
+
+  .sticky-mock {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.8rem;
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background: color-mix(in srgb, var(--paper) 82%, transparent);
+    border-top: 1px solid var(--line);
+    border-radius: 0 0 16px 16px;
+  }
+  .sticky-mock .label {
+    font-family: var(--font-script);
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: var(--magenta-deep);
+    white-space: nowrap;
+  }
+  .sticky-mock .cta-btn { padding: 0.6rem 1.1rem; font-size: 0.82rem; }
+
+  .dot-strip { display: flex; gap: 0.6rem; }
+  .dot-lg { width: 9px; height: 9px; border-radius: 50%; background: var(--magenta); }
+
+  /* ---------- Tokens table ---------- */
+  .token-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1rem;
+  }
+  .token-card {
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 1.1rem 1.2rem;
+    background: var(--paper-raised);
+  }
+  .token-card .tlabel {
+    font-weight: 700;
+    font-size: 0.86rem;
+    margin: 0 0 0.6rem;
+  }
+  .radius-demo {
+    height: 40px;
+    background: var(--rose-surface-strong);
+    border: 1px solid var(--line-strong);
+    margin-bottom: 0.6rem;
+  }
+  .r-20 { border-radius: 20px; }
+  .r-100 { border-radius: 100px; }
+  .r-16 { border-radius: 16px; }
+  .shadow-demo {
+    height: 50px;
+    border-radius: 14px;
+    background: var(--paper-raised);
+    box-shadow: var(--shadow);
+    margin-bottom: 0.6rem;
+  }
+  .token-card code {
+    font-family: var(--mono);
+    font-size: 0.74rem;
+    color: var(--ink-soft);
+  }
+
+  footer.brand {
+    text-align: center;
+    padding: 2.5rem 0 0.5rem;
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    opacity: 0.6;
+  }
+
+  /* ---------- Reveal ---------- */
+  .reveal { opacity: 0; transform: translateY(10px); transition: opacity 0.5s ease, transform 0.5s ease; }
+  .reveal.is-visible { opacity: 1; transform: translateY(0); }
+  @media (prefers-reduced-motion: reduce) {
+    .reveal { opacity: 1; transform: none; transition: none; }
+  }
+</style>
+
+<header class="topbar">
+  <div class="topbar-brand">
+    <span class="spark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M12 1C12 7 17 12 23 12C17 12 12 17 12 23C12 17 7 12 1 12C7 12 12 7 12 1Z" fill="currentColor"/></svg></span>
+    Relinq Beauty
+  </div>
+  <nav class="topbar-nav">
+    <a href="#cores">Cores</a>
+    <a href="#tipografia">Tipografia</a>
+    <a href="#componentes">Componentes</a>
+    <a href="#espacamento">Espaçamento</a>
+  </nav>
+  <div class="theme-toggle" role="group" aria-label="Prévia de tema">
+    <button type="button" data-theme-choice="light">Claro</button>
+    <button type="button" data-theme-choice="system" class="active">Auto</button>
+    <button type="button" data-theme-choice="dark">Escuro</button>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <section class="intro">
+    <span class="eyebrow">identidade visual · extraída da LP</span>
+    <p class="script-line">oi, curiosa(o).</p>
+    <h1>A identidade que já <em>vive</em> no seu código.</h1>
+    <p class="sub">
+      Este guia documenta as cores, tipografia e componentes já implementados em
+      <code>style.css</code> e <code>index.html</code> da landing page da Beauty Fair — nada aqui é
+      proposta nova, é o que já está em produção, organizado pra consulta rápida. Use o seletor
+      claro/escuro/auto no topo pra ver os tokens reagindo em tempo real.
+    </p>
+  </section>
+
+  <section class="block reveal" id="cores">
+    <div class="block-head">
+      <p class="kicker">01 · Paleta</p>
+      <h2>Rosa impresso, tinta profunda.</h2>
+      <p>Dez tokens de cor cobrem fundo, texto, superfícies e acento. O magenta é a única cor de ação — usado com moderação para manter o peso.</p>
+    </div>
+    <div class="swatch-grid" id="swatch-grid"></div>
+  </section>
+
+  <section class="block reveal" id="tipografia">
+    <div class="block-head">
+      <p class="kicker">02 · Tipografia</p>
+      <h2>Três vozes, um só sistema.</h2>
+      <p>Fraunces itálico assina os títulos, Caveat imita uma anotação manuscrita nos momentos de calor humano, e Manrope resolve todo o resto — corpo, rótulos, botões.</p>
+    </div>
+    <div class="type-row">
+      <div class="specimen">
+        <div class="specimen-meta"><strong>Script</strong>Caveat 700<br>clamp(1.6rem, 6vw, 2.1rem)</div>
+        <div class="specimen-sample script">oi, curiosa(o).</div>
+      </div>
+      <div class="specimen">
+        <div class="specimen-meta"><strong>Display</strong>Fraunces 600 itálico<br>clamp(2.3rem, 8vw, 3.4rem)</div>
+        <div class="specimen-sample display">A agenda que <em>transforma</em> seu salão.</div>
+      </div>
+      <div class="specimen">
+        <div class="specimen-meta"><strong>Corpo</strong>Manrope 400–800<br>1rem / 1.65</div>
+        <div class="specimen-sample body-text">
+          <p class="weight-line" style="font-weight:400;">400 — Foi por causa dessa frase, numa camiseta rosa.</p>
+          <p class="weight-line" style="font-weight:600;">600 — Foi por causa dessa frase, numa camiseta rosa.</p>
+          <p class="weight-line" style="font-weight:800; text-transform:uppercase; font-size:0.78rem; letter-spacing:0.1em; color:var(--magenta);">800 caps — rótulo de eyebrow</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block reveal" id="componentes">
+    <div class="block-head">
+      <p class="kicker">03 · Componentes</p>
+      <h2>As peças que se repetem na página.</h2>
+      <p>Cada componente já existe em <code style="font-family:var(--mono); background:var(--rose-surface); padding:0.1em 0.4em; border-radius:5px;">index.html</code> — reunidos aqui isolados, fora do fluxo da LP.</p>
+    </div>
+    <div class="comp-grid">
+
+      <div class="comp-card">
+        <div class="comp-label">.eyebrow</div>
+        <div class="comp-stage"><span class="eyebrow" style="margin:0;">Só chega aqui quem passou pelo estande</span></div>
+      </div>
+
+      <div class="comp-card">
+        <div class="comp-label">.cta-btn</div>
+        <div class="comp-stage">
+          <a class="cta-btn" href="#" onclick="return false;">
+            Quero conhecer a Relinq Beauty
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12H19M19 12L13 6M19 12L13 18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <div class="comp-card" style="grid-column: 1 / -1;">
+        <div class="comp-label">.menu-card</div>
+        <div class="comp-stage" style="justify-content:flex-start;">
+          <article class="mini-card">
+            <div class="mini-card-head">
+              <span class="spark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M12 1C12 7 17 12 23 12C17 12 12 17 12 23C12 17 7 12 1 12C7 12 12 7 12 1Z" fill="currentColor"/></svg></span>
+              <h3>A agenda que se vira sozinha</h3>
+              <span class="tag-pill tag">Agenda</span>
+            </div>
+            <ul class="mini-list">
+              <li><span class="dot"></span><span><strong>Agendamento</strong> pela cliente ou pela profissional</span></li>
+              <li><span class="dot"></span><span><strong>Lembretes automáticos</strong> 1 dia antes e 2h antes</span></li>
+              <li><span class="dot"></span><span><strong>Fila de espera</strong> que preenche cancelamentos sozinha</span></li>
+            </ul>
+          </article>
+        </div>
+      </div>
+
+      <div class="comp-card">
+        <div class="comp-label">.tag (rótulo de seção)</div>
+        <div class="comp-stage"><span class="tag-pill">Financeiro</span></div>
+      </div>
+
+      <div class="comp-card">
+        <div class="comp-label">.script-line</div>
+        <div class="comp-stage"><span class="script-line" style="margin:0;">ainda curiosa(o)?</span></div>
+      </div>
+
+      <div class="comp-card" style="grid-column: 1 / -1;">
+        <div class="comp-label">.sticky-cta</div>
+        <div class="sticky-mock">
+          <span class="label">ainda curiosa(o)?</span>
+          <a class="cta-btn" href="#" onclick="return false;">Fala com a gente</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="block reveal" id="espacamento">
+    <div class="block-head">
+      <p class="kicker">04 · Forma</p>
+      <p class="kicker" style="display:none;"></p>
+      <h2>Raios, sombras e linhas.</h2>
+      <p>Cantos generosos e sombra magenta suave dão o acabamento "papel elevado" aos cartões; pílulas de 100px aparecem em todo controle clicável.</p>
+    </div>
+    <div class="token-grid">
+      <div class="token-card">
+        <p class="tlabel">Raio · cartão</p>
+        <div class="radius-demo r-20"></div>
+        <code>border-radius: 20px</code>
+      </div>
+      <div class="token-card">
+        <p class="tlabel">Raio · pílula</p>
+        <div class="radius-demo r-100"></div>
+        <code>border-radius: 100px</code>
+      </div>
+      <div class="token-card">
+        <p class="tlabel">Raio · painel</p>
+        <div class="radius-demo r-16"></div>
+        <code>border-radius: 16px</code>
+      </div>
+      <div class="token-card">
+        <p class="tlabel">Sombra · elevação</p>
+        <div class="shadow-demo"></div>
+        <code>0 18px 40px -20px rgba(148,0,79,.35)</code>
+      </div>
+      <div class="token-card">
+        <p class="tlabel">Linha · padrão</p>
+        <div class="radius-demo r-16" style="background:transparent; border-color:var(--line);"></div>
+        <code>rgba(36,16,25,.14)</code>
+      </div>
+      <div class="token-card">
+        <p class="tlabel">Linha · forte</p>
+        <div class="radius-demo r-16" style="background:transparent; border-color:var(--line-strong);"></div>
+        <code>rgba(36,16,25,.22)</code>
+      </div>
+    </div>
+  </section>
+
+  <footer class="brand">Relinq Beauty · guia extraído de style.css</footer>
+</div>
+
+<script>
+  (function () {
+    var colors = [
+      { name: "Papel", v: "--paper", light: "#FBF1EF", dark: "#1B0A13" },
+      { name: "Papel Elevado", v: "--paper-raised", light: "#FFFFFF", dark: "#26101C" },
+      { name: "Tinta", v: "--ink", light: "#241019", dark: "#F8E9EF" },
+      { name: "Tinta Suave", v: "--ink-soft", light: "#5C3C4B", dark: "#D9AFC2" },
+      { name: "Magenta", v: "--magenta", light: "#D6007F", dark: "#FF4FA0" },
+      { name: "Magenta Profundo", v: "--magenta-deep", light: "#94004F", dark: "#FF7EB6" },
+      { name: "Magenta Tinta", v: "--magenta-ink", light: "#7A0044", dark: "#FFD3E9" },
+      { name: "Superfície Rosa", v: "--rose-surface", light: "#F6DCE4", dark: "#33141F" },
+      { name: "Superfície Rosa Forte", v: "--rose-surface-strong", light: "#F0C7D6", dark: "#3D1826" },
+      { name: "Dourado", v: "--gold", light: "#B98A44", dark: "#DDB06D" }
+    ];
+    var grid = document.getElementById('swatch-grid');
+    colors.forEach(function (c) {
+      var el = document.createElement('div');
+      el.className = 'swatch';
+      el.innerHTML =
+        '<div class="swatch-fill" style="background:var(' + c.v + ')"></div>' +
+        '<div class="swatch-body">' +
+          '<p class="swatch-name">' + c.name + '</p>' +
+          '<p class="swatch-var">' + c.v + '</p>' +
+          '<div class="swatch-hex"><span>claro ' + c.light + '</span></div>' +
+          '<div class="swatch-hex"><span>escuro ' + c.dark + '</span></div>' +
+        '</div>';
+      grid.appendChild(el);
+    });
+  })();
+
+  (function () {
+    var root = document.documentElement;
+    var buttons = document.querySelectorAll('.theme-toggle button');
+    var STORAGE_KEY = 'relinq-guide-theme';
+    function apply(choice) {
+      if (choice === 'light') { root.setAttribute('data-theme', 'light'); }
+      else if (choice === 'dark') { root.setAttribute('data-theme', 'dark'); }
+      else { root.removeAttribute('data-theme'); }
+      buttons.forEach(function (b) { b.classList.toggle('active', b.dataset.themeChoice === choice); });
+      try { localStorage.setItem(STORAGE_KEY, choice); } catch (e) {}
+    }
+    buttons.forEach(function (b) {
+      b.addEventListener('click', function () { apply(b.dataset.themeChoice); });
+    });
+    var saved = 'system';
+    try { saved = localStorage.getItem(STORAGE_KEY) || 'system'; } catch (e) {}
+    apply(saved);
+  })();
+
+  (function () {
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var blocks = document.querySelectorAll('.reveal');
+    if (reduce || !('IntersectionObserver' in window)) {
+      blocks.forEach(function (c) { c.classList.add('is-visible'); });
+      return;
+    }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+    blocks.forEach(function (c) { io.observe(c); });
+  })();
+</script>
