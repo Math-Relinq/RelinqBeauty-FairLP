@@ -1,0 +1,14 @@
+Alteração: ocultar o trilho da barra de rolagem (só o "polegar" visível)
+Arquivo: style.css (bloco "Barra de rolagem")
+
+- Firefox: `html.is-scrolling` agora usa `scrollbar-color: var(--magenta) transparent`
+  (antes o 2º valor era --rose-surface).
+- WebKit: removidas as regras `html.is-scrolling::-webkit-scrollbar-track`
+  (background --rose-surface) e o `border-color: var(--rose-surface)` do thumb.
+  O track fica sempre transparente; o thumb mantém `border: 3px solid transparent`
+  + `background-clip: padding-box`, então a pílula magenta flutua no gutter sem
+  trilho atrás.
+- Largura de 12px do gutter continua reservada -> sem reflow. Auto-ocultar após
+  1s (JS) inalterado.
+
+Validação por print não feita: Chrome headless não renderiza scrollbar customizada.

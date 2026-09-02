@@ -1,0 +1,23 @@
+Alteração: cor da barra de rolagem alinhada à paleta do site
+Arquivo: style.css
+
+O que foi feito
+- Adicionado bloco "Barra de rolagem (paleta do site)" logo após o `body`.
+- Firefox: `scrollbar-width: thin` e `scrollbar-color: var(--magenta) var(--rose-surface)`
+  aplicados em `html`.
+- Chromium/WebKit: `::-webkit-scrollbar` (12px), track em `var(--rose-surface)`,
+  thumb em `var(--magenta)` com `border-radius: 999px` e borda de 3px na cor do track
+  (efeito "pílula"); `:hover` do thumb em `var(--magenta-deep)`.
+
+Identidade visual
+- Usa exclusivamente tokens existentes em `:root` (--magenta, --magenta-deep,
+  --rose-surface). Adapta-se automaticamente ao tema claro/escuro, pois esses
+  tokens já são redefinidos nos blocos de dark mode. Nenhum token novo criado.
+
+Observações
+- As regras `display: none` de `.carousel-track::-webkit-scrollbar` e
+  `.slide::-webkit-scrollbar` continuam válidas (seletor mais específico),
+  então os carrosséis seguem sem barra visível.
+- Validação visual por print não foi possível: o Chrome headless não pinta a
+  barra de rolagem customizada em screenshots. O restante da página renderiza
+  normalmente nas larguras 390 / 768 / 1280, sem quebra de layout.

@@ -1,0 +1,16 @@
+Alteração VISUAL — seção .closing (parágrafo)
+
+O QUE MUDOU
+- Três trechos do parágrafo final agora em bold rosa (magenta):
+  1. "só pra quem esteve com a gente"
+  2. "já é sua."
+  3. "Relinq Beauty de verdade"
+
+ARQUIVOS
+- index.html: trechos envolvidos em <strong> no <p> da .closing.
+- style.css: nova regra `.closing p strong { color: var(--magenta); font-weight: 700; }`
+  (bold sem itálico, diferente do .closing h2 em que é itálico).
+
+VALIDAÇÃO
+- Print mobile (390) e desktop (1280) da seção .closing: destaques legíveis
+  sobre o fundo rose-surface, sem quebra de layout.

@@ -1,0 +1,25 @@
+Alteração: barra de rolagem some após 1s sem uso
+Arquivos: style.css, script.js
+
+style.css (bloco "Barra de rolagem")
+- Estado ocioso: `scrollbar-color: transparent transparent` (Firefox) e
+  track/thumb `background: transparent` (WebKit). A largura de 12px continua
+  reservada sempre, então NÃO há reflow ao aparecer/sumir.
+- Estado ativo: classe `html.is-scrolling` recolora com os tokens da paleta
+  (--magenta / --rose-surface, hover em --magenta-deep).
+- `transition: scrollbar-color .35s ease` no `html` suaviza no Firefox.
+
+script.js (novo bloco antes do handler da seta da hero)
+- Listener global de `scroll` (passivo): adiciona `is-scrolling` no
+  documentElement e agenda `setTimeout` de 1000ms para remover. Cada novo
+  evento de scroll zera o timer (debounce), então a barra só some 1s após
+  o último uso.
+
+Identidade visual
+- Sem tokens novos; cores 100% da paleta existente. Adapta a tema claro/escuro.
+
+Observações
+- Carrosséis (.carousel-track / .slide) seguem sem barra (regras
+  `display: none` mais específicas, intactas).
+- Validação por print não feita: Chrome headless não renderiza scrollbar
+  customizada em screenshot. Página carrega sem erros de JS (headless --dump-dom).

@@ -1,0 +1,16 @@
+Destaque bold rosa no h2 do closing
+
+Contexto:
+- Linha index.html:149 -> <h2>Você já respondeu <em>que sim.</em></h2>
+- O <em>que sim.</em> só herdava o itálico do h2, sem cor de destaque.
+
+Alteração (style.css):
+- Nova regra: .closing h2 em { color: var(--magenta); font-weight: 700; font-style: italic; }
+- Segue o padrão de ênfase do guia (magenta + itálico), como em .section-head h2 em,
+  acrescentando o peso bold pedido.
+- Nenhuma mudança no HTML.
+
+Validação visual:
+- Prints em desktop (1280px) e mobile (390px): "que sim." aparece em rosa/magenta,
+  bold e itálico. Restante da seção closing inalterado, sem quebra de layout ou
+  responsividade.

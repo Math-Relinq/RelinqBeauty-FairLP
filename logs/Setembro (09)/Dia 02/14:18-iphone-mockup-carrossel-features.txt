@@ -1,0 +1,59 @@
+Alteração VISUAL — seção "features"
+
+O QUE MUDOU
+- Removidos os 4 cartões (.menu / .menu-card) da seção .features.
+- No lugar: um iPhone (assets/iphoneMockup.png, cuja área de tela é um recorte
+  transparente no PNG) com um carrossel dentro da "tela".
+- 4 telas no carrossel, uma por frente do produto (Agenda, Financeiro,
+  Relacionamento, Gestão). Cada tela é uma "página limpa" na paleta do site:
+  barra de status fake (9:41 + 3 pontinhos magenta), tag da seção, título
+  em Fraunces itálico, a lista de itens (reaproveita .menu-list) e um rodapé
+  discreto "RELINQ BEAUTY". Indicador "home" do iOS na base da tela.
+- Controles abaixo do telefone: setas ‹ › + 4 bolinhas (dot ativo em magenta).
+- Interações (script.js): swipe com scroll-snap, clique nas setas/bolinhas,
+  autoplay a cada 5,5s que só roda com o telefone visível e reinicia após
+  interação. Respeita prefers-reduced-motion (sem autoplay, sem animação de
+  revelação). Revelação do bloco ao entrar na tela (.phone-wrap.is-visible).
+
+ARQUIVOS
+- index.html: markup da seção features trocado.
+- style.css: removidos .menu, .menu-card*, .menu-card-head*; mantido .menu-list
+  (reusado nas telas); adicionados .phone-wrap/.phone/.phone-frame/.phone-screen/
+  .carousel-track/.slide*/.carousel-controls/.carousel-dots/.carousel-nav/
+  .slide-foot. Removidas as regras .menu dos media queries 640px e 900px
+  (640px agora ajusta a largura do .phone).
+- script.js: bloco de revelação dos .menu-card trocado pela lógica do carrossel.
+
+GEOMETRIA DO MOCKUP
+- PNG 1370x2732, moldura opaca, "tela" transparente.
+- Recorte medido: topo 7,36% / lados 7,3% e 7,37% / base 3,7%.
+- .phone-screen usa top 7,2% / left 7,3% / right 7,37% / bottom 3,7%,
+  border-radius 7%/3,4%, overflow hidden. .phone-frame por cima (z-index 3,
+  pointer-events none) pra deixar o swipe passar pro carrossel.
+
+RESPONSIVIDADE (validado com prints, deviceScaleFactor 2)
+- 360x740, 390x844, 820x1180, 1280x900: todas as 4 telas cabem sem scroll
+  interno (scrollHeight == clientHeight em todos os casos).
+- .phone: clamp(244px,74vw,320px) no mobile; clamp(280px,42vw,340px) >=640px.
+- .slide-foot ("RELINQ BEAUTY") só aparece >=600px, onde sobra espaço vertical;
+  no mobile ficaria apertado e é escondido.
+- Setas/bolinhas ficam abaixo do telefone; quando o telefone está centralizado
+  na viewport elas ficam livres da sticky-cta.
+
+AJUSTES (mesma rodada)
+- "RELINQ BEAUTY": subido (padding-bottom do .slide-foot 1.4rem -> 2.7rem)
+  pra não encostar no indicador "home" horizontal do iPhone. Validado em
+  desktop (crop da base): folga clara entre o texto e a barrinha.
+- Cantos superiores do mockup: novo .phone::before (fundo var(--paper),
+  z-index 0, inset ~3.4%/6.6%, radius 12%/6%) pinta a cor-papel atrás da
+  tela, preenchendo as duas áreas ao lado do notch que antes ficavam
+  transparentes. Moldura (z-index 3) cobre as bordas.
+
+GUIA
+- assets/identidade-visual/identidade-visual.html: trocado o componente
+  ".menu-card" (não existe mais) por ".phone / .carousel-track / .slide"
+  com descrição e um preview estático do conteúdo de uma tela.
+
+OBS
+- Prints temporários gerados via Chromium (playwright-core) fora do repo.
+- __preview.html é cópia antiga desatualizada (usa src/hero.png) — não tocado.

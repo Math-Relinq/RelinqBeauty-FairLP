@@ -570,20 +570,22 @@
       </div>
 
       <div class="comp-card" style="grid-column: 1 / -1;">
-        <div class="comp-label">.menu-card</div>
-        <div class="comp-stage" style="justify-content:flex-start;">
-          <article class="mini-card">
+        <div class="comp-label">.phone / .carousel-track / .slide</div>
+        <div class="comp-stage" style="justify-content:flex-start; flex-direction:column; align-items:flex-start; gap:0.6rem;">
+          <p style="margin:0; color:var(--ink-soft); font-size:0.9rem;">
+            A seção <strong>features</strong> mostra um iPhone (<code style="font-family:var(--mono); background:var(--rose-surface); padding:0.1em 0.4em; border-radius:5px;">assets/iphoneMockup.png</code>, tela = recorte transparente no PNG) com um carrossel de 4 telas — uma por frente (Agenda, Financeiro, Relacionamento, Gestão). Cada tela é uma página limpa na paleta: barra de status fake, <code style="font-family:var(--mono); background:var(--rose-surface); padding:0.1em 0.4em; border-radius:5px;">.slide-tag</code>, título em Fraunces itálico, a <code style="font-family:var(--mono); background:var(--rose-surface); padding:0.1em 0.4em; border-radius:5px;">.menu-list</code> de itens e o rodapé "RELINQ BEAUTY". Controles (<code style="font-family:var(--mono); background:var(--rose-surface); padding:0.1em 0.4em; border-radius:5px;">.carousel-nav</code> + <code style="font-family:var(--mono); background:var(--rose-surface); padding:0.1em 0.4em; border-radius:5px;">.carousel-dots</code>) abaixo do aparelho; autoplay 5,5s que pausa fora da tela e respeita <code style="font-family:var(--mono); background:var(--rose-surface); padding:0.1em 0.4em; border-radius:5px;">prefers-reduced-motion</code>. Recorte da tela: topo 7,2% · lados 7,3%/7,37% · base 3,7%.</p>
+          <article class="mini-card" style="max-width:22rem;">
             <div class="mini-card-head">
-              <span class="spark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M12 1C12 7 17 12 23 12C17 12 12 17 12 23C12 17 7 12 1 12C7 12 12 7 12 1Z" fill="currentColor"/></svg></span>
-              <h3>A agenda que se vira sozinha</h3>
               <span class="tag-pill tag">Agenda</span>
+              <h3 style="width:100%;">Agenda que se organiza sozinha</h3>
             </div>
             <ul class="mini-list">
-              <li><span class="dot"></span><span><strong>Agendamento</strong> pela cliente ou pela profissional</span></li>
-              <li><span class="dot"></span><span><strong>Lembretes automáticos</strong> 1 dia antes e 2h antes</span></li>
-              <li><span class="dot"></span><span><strong>Fila de espera</strong> que preenche cancelamentos sozinha</span></li>
+              <li><span class="dot"></span><span><strong>Agendamento</strong> no ritmo dela, cliente ou profissional escolhem o horário</span></li>
+              <li><span class="dot"></span><span><strong>Lembretes automáticos</strong> no dia e faltando 2 horas</span></li>
+              <li><span class="dot"></span><span><strong>Fila de espera</strong> preenche os cancelamentos sozinha</span></li>
             </ul>
           </article>
+          <p style="margin:0.2rem 0 0; color:var(--ink-soft); font-size:0.8rem; letter-spacing:0.05em;">↑ conteúdo de uma <em>.slide</em> do carrossel (as classes reais vivem em <code style="font-family:var(--mono); background:var(--rose-surface); padding:0.1em 0.4em; border-radius:5px;">style.css</code>).</p>
         </div>
       </div>
 
