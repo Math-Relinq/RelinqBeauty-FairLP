@@ -1,0 +1,35 @@
+Subir a imagem do hero para o notebook aparecer inteiro
+======================================================
+
+Pedido
+------
+Na primeira seção (hero), subir um pouco a imagem sem mudar o formato da
+moldura, de modo que a tela do notebook apareça inteira e ainda sobre uma
+folga embaixo (bancada de mármore).
+
+Alterações (style.css)
+----------------------
+1. .hero-media img
+   - object-position: center 22%  ->  center 60%
+   (mostra a parte de baixo da foto: notebook completo + bancada)
+
+2. @media (min-width: 640px) .hero-media img
+   - object-position: center 28%  ->  center 55%
+
+3. .hero-media::after (degradê que dissolve a base da imagem no fundo)
+   - height: 36%  ->  24%
+   (em telas de celular a proporção da moldura ~ proporção da foto, então
+   quase não há corte vertical; o degradê alto cobria a metade de baixo da
+   tela do notebook. Reduzindo, a tela aparece inteira e resta só uma faixa
+   suave sobre a bancada = a folga pedida.)
+
+O formato/tamanho da moldura (.hero-media) não foi alterado.
+
+Validação (prints do hero via Playwright/Chromium no __preview.html)
+-------------------------------------------------------------------
+- mobile 375x812  : tela do notebook inteira, base + bancada com fade suave.
+- mobile 360x640  : imagem sobe, notebook completo, bancada abaixo.
+- tablet 768x1024 : notebook + teclado + folga de mármore.
+- desktop 1280    : notebook + teclado + folga de mármore, degradê discreto.
+
+Nada além do object-position e da altura do degradê foi alterado.
