@@ -1,0 +1,63 @@
+Refatoração: remover "código demais para coisa de menos" (varredura geral)
+==========================================================================
+
+Objetivo: enxugar o código, tirando poluição/duplicação sem mexer no design.
+Resultado: -165 linhas líquidas (style.css 734->612, script.js 126->114).
+Nenhuma quebra visual em light/dark nos breakpoints 360/390/768/1280
+(conferido com prints).
+
+CÓDIGO MORTO REMOVIDO (zero efeito visual)
+-----------------------------------------
+- style.css: bloco .spark / .spark svg — glyph "sparkle" nunca usado no HTML.
+- style.css: .eyebrow e .section-head .eyebrow — classe nunca usada no HTML.
+- style.css: variáveis --magenta-ink e --rose-surface-strong — 0 usos.
+- style.css: bloco duplicado :root[data-theme="dark"] (cópia byte a byte do
+  @media prefers-color-scheme:dark) e o guarda :not([data-theme="light"]).
+  Não existe toggle de tema em lugar nenhum (HTML/JS). Tema escuro passou a
+  ser só automático via @media, um bloco só.
+- index.html: atributos data-cta="primary" / data-cta="sticky" — sem uso em
+  CSS ou JS.
+
+BLOAT SIMPLIFICADO (muito código para pouco)
+--------------------------------------------
+- Scroll-cue (a setinha do hero): tinha 3 animações independentes para um
+  elemento só.
+    * removido .scroll-cue::before + @keyframes cue-ring (halo pulsante);
+    * removido @keyframes cue-label-bob + a animação do texto "ainda curioso?";
+    * mantida UMA animação: o bob da seta (.scroll-cue .arrow).
+    * removido position:relative de .scroll-cue (só existia para o ::before).
+    * consolidados os @media (prefers-reduced-motion) — não precisa mais do
+      par "no-preference liga" + "reduce desliga"; agora a animação só é
+      declarada dentro de no-preference.
+- Barra de rolagem auto-ocultável: ~33 linhas de CSS (html.is-scrolling,
+  ::-webkit-scrollbar-track, transições) + ~11 linhas de JS (timer + listener
+  global de scroll) só para a barra sumir 1s após parar de rolar.
+  Trocado por barra fina magenta estática (scrollbar-width:thin +
+  scrollbar-color, e thumb magenta no webkit). Mesma identidade, sem máquina
+  de estado.
+- .menu-list li .dot: removido o transition + @media (hover:hover) com
+  hover que escalava o pontinho 1.6x dentro do carrossel (microinteração
+  invisível na prática).
+- Comentários: os "textões" de 3-4 linhas explicando flexbox em .hero,
+  .hero-media, .hero-copy e .hero h1 viraram uma linha cada.
+- .hero: removido min-height:100svh redundante (já tem height:100svh).
+
+MANTIDO DE PROPÓSITO (é feature, não poluição)
+---------------------------------------------
+- Tema escuro automático.
+- Mockup do iPhone (status bar 9:41, indicador "home", slide-foot).
+- Carrossel + autoplay + reveal on scroll do .phone-wrap.
+- Animação de entrada do hero (hero-in) — uma animação só; tirei apenas o
+  stagger nth-child(1)/(2).
+- Estados hover/active/focus do .cta-btn e .carousel-nav (padrão de a11y).
+
+ARQUIVOS TOCADOS
+---------------
+- style.css   (-122 linhas)
+- script.js   (-12 linhas)
+- index.html  (2 atributos)
+
+OBS (não mexido)
+----------------
+- __preview.html (7.9 KB) está commitado mas não é referenciado por nada.
+  Parece rascunho antigo; deixei quieto para não apagar arquivo sem confirmar.

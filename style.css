@@ -6,9 +6,7 @@
   --ink-soft: #7B5A68;
   --magenta: #D6007F;
   --magenta-deep: #AE1E6B;
-  --magenta-ink: #8E1457;
   --rose-surface: #FAEAF0;
-  --rose-surface-strong: #F4D8E3;
   --gold: #C6A06A;
   --line: rgba(59, 36, 48, 0.10);
   --line-strong: rgba(59, 36, 48, 0.16);
@@ -19,18 +17,16 @@
   --font-body: "Manrope", "Segoe UI", system-ui, sans-serif;
 }
 
-/* ---------- Tema escuro (automático via SO + forçado via [data-theme]) ---------- */
+/* ---------- Tema escuro (automático via SO) ---------- */
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
+  :root {
     --paper: #1B0A13;
     --paper-raised: #26101C;
     --ink: #F8E9EF;
     --ink-soft: #E0B9CB;
     --magenta: #FF4FA0;
     --magenta-deep: #FF7EB6;
-    --magenta-ink: #FFD3E9;
     --rose-surface: #33141F;
-    --rose-surface-strong: #3D1826;
     --gold: #DDB06D;
     --line: rgba(248, 233, 239, 0.10);
     --line-strong: rgba(248, 233, 239, 0.18);
@@ -38,27 +34,15 @@
   }
 }
 
-:root[data-theme="dark"] {
-  --paper: #1B0A13;
-  --paper-raised: #26101C;
-  --ink: #F8E9EF;
-  --ink-soft: #E0B9CB;
-  --magenta: #FF4FA0;
-  --magenta-deep: #FF7EB6;
-  --magenta-ink: #FFD3E9;
-  --rose-surface: #33141F;
-  --rose-surface-strong: #3D1826;
-  --gold: #DDB06D;
-  --line: rgba(248, 233, 239, 0.10);
-  --line-strong: rgba(248, 233, 239, 0.18);
-  --shadow: 0 16px 38px -20px rgba(0, 0, 0, 0.5);
+/* ---------- Reset & base ---------- */
+* {
+  box-sizing: border-box;
 }
 
-/* ---------- Reset & base ---------- */
-* { box-sizing: border-box; }
-
 @media (prefers-reduced-motion: no-preference) {
-  html { scroll-behavior: smooth; }
+  html {
+    scroll-behavior: smooth;
+  }
 }
 
 body {
@@ -70,13 +54,9 @@ body {
   overflow-x: hidden;
 }
 
-/* ---------- Barra de rolagem (paleta do site) — some após 1s sem uso ---------- */
+/* ---------- Barra de rolagem (paleta do site) ---------- */
 html {
   scrollbar-width: thin;
-  scrollbar-color: transparent transparent;
-  transition: scrollbar-color 0.35s ease;
-}
-html.is-scrolling {
   scrollbar-color: var(--magenta) transparent;
 }
 
@@ -85,22 +65,14 @@ html.is-scrolling {
   height: 12px;
 }
 
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
 ::-webkit-scrollbar-thumb {
-  background: transparent;
+  background: var(--magenta);
   border-radius: 999px;
   border: 3px solid transparent;
   background-clip: padding-box;
 }
 
-html.is-scrolling::-webkit-scrollbar-thumb {
-  background: var(--magenta);
-}
-
-html.is-scrolling::-webkit-scrollbar-thumb:hover {
+::-webkit-scrollbar-thumb:hover {
   background: var(--magenta-deep);
 }
 
@@ -111,27 +83,17 @@ html.is-scrolling::-webkit-scrollbar-thumb:hover {
   position: relative;
 }
 
-a { color: inherit; }
-
-/* ---------- Sparkle glyph ---------- */
-.spark {
-  display: inline-block;
-  width: 1em;
-  height: 1em;
-  vertical-align: -0.08em;
+a {
+  color: inherit;
 }
-.spark svg { width: 100%; height: 100%; display: block; }
 
 /* ---------- Hero ---------- */
-/* A hero ocupa exatamente uma tela (viewport pequeno) em qualquer aparelho:
-   imagem em cima, título + seta sempre visíveis embaixo. A altura é travada em
-   100svh para o conteúdo nunca "vazar" quando a barra do navegador está aberta. */
+/* Ocupa exatamente uma tela (100svh) em qualquer aparelho: imagem em cima, título + seta embaixo. */
 .hero {
   position: relative;
   width: 100%;
-  height: 100vh;          /* fallback p/ navegadores sem unidades svh/dvh */
+  height: 100vh;          /* fallback p/ navegadores sem svh */
   height: 100svh;
-  min-height: 100svh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -140,13 +102,10 @@ a { color: inherit; }
   overflow: hidden;
 }
 
-/* imagem retrato: ocupa a largura toda no mobile, vira um cartão centrado no desktop.
-   flex: 0 1 auto + min-height: 0 => pode ENCOLHER se o título precisar de mais espaço,
-   mas nunca cresce além da base (58svh). Sem min/max em px, que quebravam telas
-   muito curtas (imagem tomava tudo) ou muito altas. */
+/* imagem retrato: largura total no mobile, cartão centrado no desktop; encolhe se o título precisar de espaço */
 .hero-media {
   position: relative;
-  flex: 0 1 auto;          /* nunca cresce além de 58svh; encolhe se faltar espaço */
+  flex: 0 1 auto;
   width: 100%;
   height: 58vh;
   height: 58svh;
@@ -162,7 +121,7 @@ a { color: inherit; }
   display: block;
 }
 
-/* gradient na parte inferior: a imagem se dissolve no fundo da página (sutil) */
+/* a imagem se dissolve no fundo da página */
 .hero-media::after {
   content: "";
   position: absolute;
@@ -179,14 +138,11 @@ a { color: inherit; }
   pointer-events: none;
 }
 
-/* o texto fica logo abaixo da imagem, sem sobrepô-la; a seta vai pro pé da tela.
-   flex: 1 1 auto + min-height: 0 => preenche o espaço que sobra e garante que a
-   seta (margin-top: auto) fique ancorada no pé da tela em qualquer aparelho. */
+/* preenche o espaço livre e não encolhe: título e seta sempre cabem; quem cede espaço é a imagem */
 .hero-copy {
   position: relative;
   z-index: 2;
-  flex: 1 0 auto;          /* preenche o espaço livre e NÃO encolhe: o título e a
-                              seta sempre cabem; quem cede espaço é a imagem */
+  flex: 1 0 auto;
   min-height: 0;
   width: 100%;
   max-width: 720px;
@@ -201,24 +157,56 @@ a { color: inherit; }
   font-family: var(--font-display);
   font-weight: 600;
   font-style: italic;
-  /* em telas normais é idêntico a 8vw; o min(…,8.2vh) só entra em telas MUITO
-     baixas (tela dividida, foldables) p/ o título não empurrar a seta pra fora */
+  /* min(…,8.2vh) só entra em telas muito baixas p/ o título não empurrar a seta pra fora */
   font-size: clamp(2.3rem, min(8vw, 8.2vh), 3.4rem);
   line-height: 1.1;
   letter-spacing: -0.01em;
   max-width: 16ch;
-  /* margin-top: auto => o espaço livre da coluna se divide igualmente acima do
-     título e abaixo dele (até a seta), deixando o título ~centrado na faixa
-     escura em qualquer altura de tela, como no layout de referência */
   margin: auto 0 0;
   text-wrap: balance;
   color: var(--ink);
 }
 
-/* palavras-chave destacadas — mesmo tratamento de ênfase do guia (magenta + itálico) */
 .hero h1 em {
   color: var(--magenta);
   font-style: italic;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .hero-copy > * {
+    animation: hero-in 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .scroll-cue{
+    scale: 0.8;
+  }
+
+  .scroll-cue .arrow {
+    animation: bob 1.8s ease-in-out infinite;
+  }
+}
+
+@keyframes hero-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(5px);
+  }
 }
 
 /* seta que rola para a próxima seção — ancorada no pé da tela */
@@ -230,7 +218,6 @@ a { color: inherit; }
   gap: clamp(0.4rem, 1.6vw, 0.7rem);
 }
 
-/* chamada rosa acima da seta — pequena, mas chamativa (script da identidade) */
 .scroll-cue-label {
   margin: 0;
   font-family: var(--font-script);
@@ -238,19 +225,9 @@ a { color: inherit; }
   font-size: clamp(1.15rem, 4.6vw, 1.5rem);
   line-height: 1;
   color: var(--magenta);
-  text-align: center;
-  letter-spacing: 0.01em;
-}
-@media (prefers-reduced-motion: no-preference) {
-  .scroll-cue-label { animation: cue-label-bob 1.8s ease-in-out infinite; }
-}
-@keyframes cue-label-bob {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-2px); }
 }
 
 .scroll-cue {
-  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -266,63 +243,21 @@ a { color: inherit; }
   transition: transform 0.25s ease, color 0.25s ease, box-shadow 0.25s ease;
   -webkit-tap-highlight-color: transparent;
 }
-/* halo pulsante — destaque discreto, seguro em tema claro/escuro (currentColor) */
-.scroll-cue::before {
-  content: "";
-  position: absolute;
-  inset: -1.5px;
-  border-radius: inherit;
-  border: 2px solid currentColor;
-  opacity: 0;
-  pointer-events: none;
-}
-@media (prefers-reduced-motion: no-preference) {
-  .scroll-cue::before { animation: cue-ring 2.4s ease-out infinite; }
-}
-@keyframes cue-ring {
-  0% { opacity: 0.55; transform: scale(1); }
-  70%, 100% { opacity: 0; transform: scale(1.55); }
-}
+
 .scroll-cue:hover,
 .scroll-cue:focus-visible {
   transform: translateY(3px);
   color: var(--magenta-deep);
   box-shadow: 0 14px 30px -12px rgba(148, 0, 79, 0.5), var(--shadow);
 }
-.scroll-cue:focus-visible { outline: 2px solid var(--gold); outline-offset: 4px; }
 
-.scroll-cue .arrow { display: inline-flex; animation: bob 1.8s ease-in-out infinite; }
-@keyframes bob {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(5px); }
+.scroll-cue:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 4px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .hero-copy > * { animation: hero-in 0.7s cubic-bezier(0.16, 1, 0.3, 1) both; }
-  .hero-copy > *:nth-child(1) { animation-delay: 0.08s; }
-  .hero-copy > *:nth-child(2) { animation-delay: 0.22s; }
-}
-@keyframes hero-in {
-  from { opacity: 0; transform: translateY(14px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-@media (prefers-reduced-motion: reduce) {
-  .scroll-cue .arrow { animation: none; }
-}
-
-/* ---------- Rótulos e assinatura à mão (usados nas seções abaixo) ---------- */
-.eyebrow {
-  font-family: var(--font-body);
-  font-weight: 800;
-  font-size: 0.72rem;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--magenta);
-  background: var(--rose-surface);
-  border: 1px solid var(--line-strong);
-  padding: 0.5rem 1rem;
-  border-radius: 100px;
-  margin-bottom: 1.6rem;
+.scroll-cue .arrow {
+  display: inline-flex;
 }
 
 .script-line {
@@ -336,9 +271,15 @@ a { color: inherit; }
 }
 
 /* ---------- Section shared ---------- */
-section { padding: 2.6rem 0; }
-.section-head { text-align: center; margin-bottom: 2rem; }
-.section-head .eyebrow { background: transparent; border-color: transparent; padding: 0; }
+section {
+  padding: 2.6rem 0;
+}
+
+.section-head {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
 .section-head h2 {
   font-family: var(--font-display);
   font-weight: 600;
@@ -347,7 +288,12 @@ section { padding: 2.6rem 0; }
   margin: 0.5rem 0 0.7rem;
   text-wrap: balance;
 }
-.section-head h2 em { color: var(--magenta); font-style: italic; }
+
+.section-head h2 em {
+  color: var(--magenta);
+  font-style: italic;
+}
+
 .section-head p {
   color: var(--ink-soft);
   font-size: 1rem;
@@ -366,9 +312,18 @@ section { padding: 2.6rem 0; }
   transform: translateY(16px);
   transition: opacity 0.7s ease, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
-.phone-wrap.is-visible { opacity: 1; transform: translateY(0); }
+
+.phone-wrap.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .phone-wrap { opacity: 1; transform: none; transition: none; }
+  .phone-wrap {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
 }
 
 .phone {
@@ -441,7 +396,10 @@ section { padding: 2.6rem 0; }
   scrollbar-width: none;
   overscroll-behavior-x: contain;
 }
-.carousel-track::-webkit-scrollbar { display: none; }
+
+.carousel-track::-webkit-scrollbar {
+  display: none;
+}
 
 .slide {
   flex: 0 0 100%;
@@ -456,7 +414,10 @@ section { padding: 2.6rem 0; }
   display: flex;
   flex-direction: column;
 }
-.slide::-webkit-scrollbar { display: none; }
+
+.slide::-webkit-scrollbar {
+  display: none;
+}
 
 .slide-status {
   flex-shrink: 0;
@@ -469,7 +430,12 @@ section { padding: 2.6rem 0; }
   letter-spacing: 0.02em;
   color: var(--ink);
 }
-.slide-status-dots { display: inline-flex; gap: 3px; }
+
+.slide-status-dots {
+  display: inline-flex;
+  gap: 3px;
+}
+
 .slide-status-dots i {
   display: block;
   width: 5px;
@@ -479,7 +445,9 @@ section { padding: 2.6rem 0; }
   opacity: 0.85;
 }
 
-.slide-body { padding: 0.3rem 1.1rem 1.75rem; }
+.slide-body {
+  padding: 0.3rem 1.1rem 1.75rem;
+}
 
 .slide-tag {
   display: inline-block;
@@ -504,8 +472,14 @@ section { padding: 2.6rem 0; }
   color: var(--ink);
 }
 
-.slide .menu-list { gap: 0.44rem; }
-.slide .menu-list li { font-size: 0.77rem; line-height: 1.4; }
+.slide .menu-list {
+  gap: 0.44rem;
+}
+
+.slide .menu-list li {
+  font-size: 0.77rem;
+  line-height: 1.4;
+}
 
 /* rodapé da tela: só aparece onde sobra espaço (telas maiores) */
 .slide-foot {
@@ -521,8 +495,11 @@ section { padding: 2.6rem 0; }
   color: var(--ink-soft);
   opacity: 0.7;
 }
+
 @media (min-width: 600px) {
-  .slide-foot { display: block; }
+  .slide-foot {
+    display: block;
+  }
 }
 
 /* ---------- Controles do carrossel ---------- */
@@ -532,7 +509,11 @@ section { padding: 2.6rem 0; }
   gap: 0.95rem;
 }
 
-.carousel-dots { display: flex; gap: 0.5rem; }
+.carousel-dots {
+  display: flex;
+  gap: 0.5rem;
+}
+
 .carousel-dots button {
   width: 8px;
   height: 8px;
@@ -543,6 +524,7 @@ section { padding: 2.6rem 0; }
   cursor: pointer;
   transition: transform 0.25s ease, background 0.25s ease;
 }
+
 .carousel-dots button[aria-current="true"] {
   background: var(--magenta);
   transform: scale(1.4);
@@ -564,10 +546,25 @@ section { padding: 2.6rem 0; }
   transition: transform 0.2s ease, color 0.2s ease;
   -webkit-tap-highlight-color: transparent;
 }
-.carousel-nav svg { width: 18px; height: 18px; }
-.carousel-nav:hover { transform: translateY(-2px); color: var(--magenta-deep); }
-.carousel-nav:active { transform: translateY(0) scale(0.94); }
-.carousel-nav:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+
+.carousel-nav svg {
+  width: 18px;
+  height: 18px;
+}
+
+.carousel-nav:hover {
+  transform: translateY(-2px);
+  color: var(--magenta-deep);
+}
+
+.carousel-nav:active {
+  transform: translateY(0) scale(0.94);
+}
+
+.carousel-nav:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+}
 
 .menu-list {
   list-style: none;
@@ -593,13 +590,12 @@ section { padding: 2.6rem 0; }
   background: var(--magenta);
   margin-top: 0.55em;
   flex-shrink: 0;
-  transition: transform 0.25s ease;
-}
-@media (hover: hover) {
-  .menu-list li:hover .dot { transform: scale(1.6); }
 }
 
-.menu-list li strong { color: var(--ink); font-weight: 700; }
+.menu-list li strong {
+  color: var(--ink);
+  font-weight: 700;
+}
 
 /* ---------- Closing ---------- */
 .closing {
@@ -610,7 +606,9 @@ section { padding: 2.6rem 0; }
   margin-top: 1rem;
 }
 
-.closing .script-line { color: var(--magenta-deep); }
+.closing .script-line {
+  color: var(--magenta-deep);
+}
 
 .closing h2 {
   font-family: var(--font-display);
@@ -621,7 +619,11 @@ section { padding: 2.6rem 0; }
   text-wrap: balance;
 }
 
-.closing h2 em { color: var(--magenta); font-weight: 700; font-style: italic; }
+.closing h2 em {
+  color: var(--magenta);
+  font-weight: 700;
+  font-style: italic;
+}
 
 .closing p {
   color: var(--ink-soft);
@@ -631,7 +633,10 @@ section { padding: 2.6rem 0; }
   margin: 0 auto 1.9rem;
 }
 
-.closing p strong { color: var(--magenta); font-weight: 700; }
+.closing p strong {
+  color: var(--magenta);
+  font-weight: 700;
+}
 
 .cta-btn {
   display: inline-flex;
@@ -650,9 +655,20 @@ section { padding: 2.6rem 0; }
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.cta-btn:hover { transform: translateY(-2px); box-shadow: 0 18px 34px -12px rgba(148, 0, 79, 0.6); }
-.cta-btn:active { transform: translateY(0) scale(0.97); box-shadow: 0 10px 22px -12px rgba(148, 0, 79, 0.5); }
-.cta-btn:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
+.cta-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 34px -12px rgba(148, 0, 79, 0.6);
+}
+
+.cta-btn:active {
+  transform: translateY(0) scale(0.97);
+  box-shadow: 0 10px 22px -12px rgba(148, 0, 79, 0.5);
+}
+
+.cta-btn:focus-visible {
+  outline: 3px solid var(--gold);
+  outline-offset: 3px;
+}
 
 .micro {
   margin-top: 0.9rem;
@@ -665,7 +681,9 @@ section { padding: 2.6rem 0; }
 /* ---------- Sticky CTA ---------- */
 .sticky-cta {
   position: fixed;
-  left: 0; right: 0; bottom: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   z-index: 20;
   display: flex;
   align-items: center;
@@ -678,9 +696,15 @@ section { padding: 2.6rem 0; }
   transform: translateY(120%);
   transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
-.sticky-cta.is-visible { transform: translateY(0); }
+
+.sticky-cta.is-visible {
+  transform: translateY(0);
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .sticky-cta { transition: none; }
+  .sticky-cta {
+    transition: none;
+  }
 }
 
 .sticky-cta .label {
@@ -709,8 +733,14 @@ footer.brand {
 
 /* ---------- Responsivo (tablet e desktop) ---------- */
 @media (min-width: 640px) {
-  .page { padding-left: 2rem; padding-right: 2rem; }
-  .phone { width: clamp(280px, 42vw, 340px); }
+  .page {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+
+  .phone {
+    width: clamp(280px, 42vw, 340px);
+  }
 
   /* a imagem retrato vira um cartão centrado, respeitando a proporção */
   .hero-media {
@@ -721,14 +751,33 @@ footer.brand {
     border-radius: 20px;
     box-shadow: var(--shadow);
   }
-  .hero-media img { object-position: center 55%; }
-  .hero-copy { padding-top: clamp(1.8rem, 4vh, 2.75rem); }
+
+  .hero-media img {
+    object-position: center 55%;
+  }
+
+  .hero-copy {
+    padding-top: clamp(1.8rem, 4vh, 2.75rem);
+  }
+
   /* em telas altas, o título centra no espaço livre e a seta fica no pé */
-  .hero h1 { margin-top: auto; }
+  .hero h1 {
+    margin-top: auto;
+  }
 }
 
 @media (min-width: 900px) {
-  .page { max-width: 760px; }
-  .hero-media { width: min(46vw, 28rem); height: min(68svh, 34rem); max-height: 34rem; }
-  section { padding: 3.2rem 0; }
+  .page {
+    max-width: 760px;
+  }
+
+  .hero-media {
+    width: min(46vw, 28rem);
+    height: min(68svh, 34rem);
+    max-height: 34rem;
+  }
+
+  section {
+    padding: 3.2rem 0;
+  }
 }

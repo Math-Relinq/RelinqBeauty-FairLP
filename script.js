@@ -103,18 +103,6 @@
     }
   }
 
-  // ---------- BARRA DE ROLAGEM: aparece ao rolar e some após 1s sem uso ----------
-  var root = document.documentElement;
-  var scrollbarTimer = null;
-  function showScrollbar() {
-    root.classList.add('is-scrolling');
-    clearTimeout(scrollbarTimer);
-    scrollbarTimer = setTimeout(function () {
-      root.classList.remove('is-scrolling');
-    }, 1000);
-  }
-  window.addEventListener('scroll', showScrollbar, { passive: true });
-
   // ---------- HERO: seta de rolagem leva direto pra próxima seção ----------
   var scrollCue = document.querySelector('.scroll-cue');
   var nextSection = document.querySelector('.features');

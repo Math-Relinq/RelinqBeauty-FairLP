@@ -1,0 +1,37 @@
+Formatação: expandir todos os one-liners do style.css
+=====================================================
+
+Pedido: nenhuma regra em uma única linha. Toda regra no formato
+
+  seletor {
+    propriedade: valor;
+    propriedade2: valor;
+  }
+
+O que mudou
+-----------
+- Todas as regras que estavam em uma linha (ex. `* { box-sizing: border-box; }`,
+  `.carousel-nav:hover { ... }`, blocos de @keyframes, regras dentro de @media)
+  foram quebradas: uma declaração por linha, indentação de 2 espaços (mantida a
+  convenção do arquivo).
+- Também separadas as declarações que dividiam linha dentro de um bloco
+  (ex. `left: 0; right: 0; bottom: 0;` em .sticky-cta).
+- Corrigido `.cta-btn:hover{` -> `.cta-btn:hover {` (faltava espaço).
+- Só formatação: nenhum seletor, valor ou propriedade alterado. Render idêntico
+  conferido com print (carrossel mobile 390, light).
+
+Verificação
+-----------
+- grep por `{...}` na mesma linha: 0 ocorrências.
+- grep por linha com 2+ `;`: 0 ocorrências.
+- Chaves balanceadas: 107 / 107.
+
+Arquivo: style.css (617 -> ~779 linhas, só por causa da expansão).
+
+Pendência
+---------
+- Apareceu no disco (edição externa, não minha) um bloco vazio dentro do
+  @media (prefers-reduced-motion: no-preference):
+      .scroll-cue{
+      }
+  É regra vazia, sem efeito. Sugerido remover — aguardando confirmação.
