@@ -147,18 +147,60 @@
       </section>
 
       <!-- ============ CLOSING — CTA final + formulário ============ -->
-      <section class="closing">
+      <section class="closing" id="formulario">
         <p class="script-line">lembra da pergunta na camiseta?</p>
         <h2><em>Você já respondeu</em> que sim.</h2>
         <p>
           Essa página existe <strong>só pra quem esteve com a gente</strong> na Beauty Fair — a exclusividade <strong>já é sua.</strong>
-          Preencha o formulário e alguém do nosso time entra em contato pra te mostrar a <strong>Relinq Beauty de verdade</strong>, funcionando, e marcar uma conversa direto na agenda da nossa consultora.
+          Preencha o formulário e alguém do nosso time entra em contato pra te mostrar a <strong>Relinq Beauty funcionando</strong>.
         </p>
-        <a class="cta-btn" href="https://app.relinqsales.com.br/form/76afd85d">
-          Quero conhecer a Relinq Beauty
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12H19M19 12L13 6M19 12L13 18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </a>
-        <p class="micro">Leva menos de um minuto pra preencher. Sem compromisso.</p>
+
+        <form action="" aria-labelledby="form-title">
+          <h3 class="form-title" id="form-title">Leva menos de um minuto pra preencher. <span>Sem compromisso.</span></h3>
+          <ul class="form">
+            <li><input type="text" placeholder="Nome" class="formField"></li>
+            <li>
+              <input type="email" placeholder="Email" class="formField" id="campoEmail" autocomplete="email" aria-describedby="erroEmail">
+              <p class="formError" id="erroEmail" role="alert">Digite um e-mail válido pra gente conseguir te responder.</p>
+            </li>
+            <li><input type="tel" inputmode="tel" autocomplete="tel" maxlength="16" placeholder="Telefone (+55)" class="formField" id="campoTelefone"></li>
+            <li>
+              <div class="combo" id="especializacaoCombo">
+                <button type="button" class="formField formSelect is-placeholder" id="especializacao"
+                        aria-haspopup="listbox" aria-expanded="false"
+                        aria-controls="especializacaoList" aria-label="Qual a sua especialização?">
+                  <span class="comboValue">Qual a sua especialização?</span>
+                </button>
+                <ul class="comboList" id="especializacaoList" role="listbox" aria-label="Especializações" tabindex="-1" hidden>
+                  <li class="comboOption" role="option" aria-selected="false" data-value="cabeleireiro">Cabeleireiro(a)</li>
+                  <li class="comboOption" role="option" aria-selected="false" data-value="colorista">Colorista</li>
+                  <li class="comboOption" role="option" aria-selected="false" data-value="barbeiro">Barbeiro(a)</li>
+                  <li class="comboOption" role="option" aria-selected="false" data-value="manicure-pedicure">Manicure / Pedicure</li>
+                  <li class="comboOption" role="option" aria-selected="false" data-value="nail-designer">Nail Designer</li>
+                  <li class="comboOption" role="option" aria-selected="false" data-value="designer-sobrancelhas">Designer de Sobrancelhas</li>
+                  <li class="comboOption" role="option" aria-selected="false" data-value="lash-designer">Lash Designer (extensão de cílios)</li>
+                  <li class="comboOption" role="option" aria-selected="false" data-value="maquiador">Maquiador(a)</li>
+                  <li class="comboOption" role="option" aria-selected="false" data-value="esteticista">Esteticista</li>
+                  <li class="comboOption" role="option" aria-selected="false" data-value="micropigmentador">Micropigmentador(a)</li>
+                  <li class="comboOption" role="option" aria-selected="false" data-value="depilador">Depilador(a)</li>
+                  <li class="comboOption" role="option" aria-selected="false" data-value="massoterapeuta">Massoterapeuta</li>
+                  <li class="comboOption" role="option" aria-selected="false" data-value="terapeuta-capilar">Terapeuta capilar / Tricologista</li>
+                  <li class="comboOption" role="option" aria-selected="false" data-value="podologo">Podólogo(a)</li>
+                  <li class="comboOption" role="option" aria-selected="false" data-value="trancista">Trancista</li>
+                  <li class="comboOption" role="option" aria-selected="false" data-value="designer-penteados">Designer de Penteados</li>
+                  <li class="comboOption" role="option" aria-selected="false" data-value="gestor-salao">Dono(a) / Gestor(a) de salão</li>
+                  <li class="comboOption" role="option" aria-selected="false" data-value="outro">Outro</li>
+                </ul>
+                <input type="hidden" name="especializacao" id="especializacaoValor">
+              </div>
+            </li>
+            <li class="especializacao-outro" hidden>
+              <input type="text" placeholder="Conta pra gente: qual a sua área?" class="formField" id="especializacao-outro" aria-label="Descreva a sua especialização">
+            </li>
+          </ul>
+          
+          <button class="formBtn" type="submit" onclick="enviado(event)">Dar um UP no meu negocio</button>
+        </form>
       </section>
     </main>
 
@@ -167,9 +209,10 @@
   </div>
 
   <!-- ============ STICKY CTA — barra fixa, some/aparece com a hero ============ -->
+
   <aside class="sticky-cta" aria-label="Chamada para ação">
     <span class="label">ainda curiosa?</span>
-    <a class="cta-btn" href="https://app.relinqsales.com.br/form/76afd85d">Fala com a gente</a>
+    <a class="cta-btn" href="#formulario">Fala com a gente</a>
   </aside>
 
   <script src="script.js"></script>

@@ -1,0 +1,37 @@
+Máscara de telefone no formulário
+==================================
+
+Contexto
+--------
+O campo "Telefone (+55)" do formulário de contato era um <input type="text">
+comum, sem nenhuma formatação. O usuário pediu uma máscara que formate o
+texto digitado automaticamente como número de telefone.
+
+Alterações
+----------
+index.html
+- Campo de telefone: type="text" -> type="tel", adicionados
+  inputmode="tel", autocomplete="tel", maxlength="16" e id="campoTelefone".
+  Classe .formField mantida (estilo inalterado).
+
+script.js
+- Novo bloco "FORMULÁRIO: máscara de telefone" dentro da IIFE.
+- formatarTelefone(valor): extrai só os dígitos (máx. 11 = DDD + 9),
+  monta progressivamente:
+    (11
+    (11) 9
+    (11) 9912-3456   -> fixo, 10 dígitos: (XX) XXXX-XXXX
+    (11) 99123-4567  -> celular, 11 dígitos: (XX) XXXXX-XXXX
+- Listener de "input" reaplica a máscara a cada tecla e reposiciona o
+  cursor contando os dígitos antes dele (evita o cursor pular pro fim ao
+  editar no meio do texto).
+
+Testes
+------
+- Lógica (node): "", "1", "11", "119", "1199123456", "11991234567",
+  "1132145678", entradas com excesso de dígitos e com lixo ("abc11 99123-4567")
+  -> todas formatam corretamente e o cap de 11 dígitos funciona.
+- Visual (Chrome headless, 390px e 1000px): simulada a digitação de
+  "11991234567"; campo exibe "(11) 99123-4567", contorno/altura/tipografia
+  do campo idênticos aos demais, layout do formulário intacto em mobile e
+  desktop.

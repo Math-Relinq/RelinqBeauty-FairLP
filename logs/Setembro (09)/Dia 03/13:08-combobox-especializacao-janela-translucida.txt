@@ -1,0 +1,62 @@
+Combobox de especialização: janela de seleção translúcida (custom listbox)
+
+Contexto / motivo
+-----------------
+O <select> nativo não permite deixar a lista aberta translúcida (o painel é
+desenhado pelo browser/SO e ignora background/backdrop-filter). Para atender ao
+pedido — janela de seleção translúcida, mas com os textos sempre legíveis —
+o campo virou um listbox próprio (botão + <ul role="listbox">).
+
+index.html
+----------
+- <select#especializacao> substituído por:
+  <div class="combo">
+    <button class="formField formSelect is-placeholder" id="especializacao"
+            aria-haspopup="listbox" aria-expanded="false" aria-controls="especializacaoList">
+      <span class="comboValue">Qual a sua especialização?</span>
+    </button>
+    <ul class="comboList" id="especializacaoList" role="listbox" tabindex="-1" hidden>
+      <li class="comboOption" role="option" aria-selected="false" data-value="...">...</li>
+      ... (18 opções, "Outro" por último)
+    </ul>
+    <input type="hidden" name="especializacao" id="especializacaoValor">
+  </div>
+- Mantido o <li class="especializacao-outro" hidden> com o campo livre.
+
+style.css
+---------
+- .combo: position relative + z-index 1; recebe a escala 0.9 (antes no campo),
+  pra lista abrir alinhada ao botão. .combo.is-open { z-index: 40 } pra a janela
+  passar por cima do botão de envio e do rodapé.
+- .formSelect.formField: pill roxo-escuro translúcido + chevron SVG (igual antes).
+- .formSelect.is-placeholder .comboValue: texto com ar de placeholder.
+- .comboList (a janela): position absolute, translúcida
+  (color-mix(#2c0736 82%, transparent)) + backdrop-filter blur(18px) saturate(1.4),
+  borda clara translúcida, raio 20px, sombra, max-height 264px com scroll estilizado.
+  Animação comboIn (0.16s) só com prefers-reduced-motion: no-preference.
+- .comboList--up: abre pra cima quando não há espaço abaixo.
+- .comboOption: texto #F8E9EF + text-shadow (garante contraste sobre o fundo
+  translúcido), hover/.is-active e [aria-selected=true] com realce translúcido claro.
+  "Outro" com separador (border-top) e negrito.
+
+script.js
+---------
+- Bloco do combo reescrito como controlador de listbox:
+  abrir/fechar (toggle hidden + .is-open + aria-expanded), foco na lista ao abrir,
+  navegação por teclado (Setas, Home/End, Enter/Espaço, Esc, Tab), destaque
+  ("is-active") e aria-activedescendant, clique fora fecha, flip pra cima quando
+  não cabe abaixo.
+- choose(): grava data-value no input hidden, atualiza o rótulo do botão, tira
+  o estado placeholder, e — se for "outro" — mostra o campo livre e dá foco;
+  senão esconde e limpa.
+
+Validação (visual)
+------------------
+- Screenshots via puppeteer-core + Chrome, 390 / 768 / 1280, temas claro e escuro:
+  - janela de seleção nitidamente translúcida (dá pra ver o conteúdo atrás com blur)
+    e textos das opções sempre legíveis (cor clara + text-shadow);
+  - janela passa por cima do botão de envio / rodapé quando aberta (z-index ok);
+  - largura da janela alinhada ao botão (escala movida pro .combo);
+  - escolher "Outro" fecha a lista e revela o campo "Conta pra gente: qual a sua
+    área?" já focado;
+  - estados fechado/aberto/selecionado ok nos dois temas e nas três larguras.

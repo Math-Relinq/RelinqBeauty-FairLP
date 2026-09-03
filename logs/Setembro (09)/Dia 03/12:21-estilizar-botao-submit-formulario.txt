@@ -1,0 +1,22 @@
+Estilizar o botão de envio do formulário (closing)
+
+O que foi alterado
+- style.css: adicionada regra para `.closing form button[type="submit"]` (antes sem
+  estilo, aparecia como botão nativo do navegador).
+- Visual alinhado à identidade da página, reaproveitando os tokens existentes:
+  - pill magenta preenchido igual ao `.cta-btn` (background var(--magenta),
+    borda var(--magenta-deep), texto #FFF6FA, font-weight 800, border-radius 100px,
+    sombra 0 14px 30px -12px rgba(148,0,79,0.55)).
+  - largura casada com os campos: width 100%, max-width 24rem, centralizado
+    (margin auto), mesmo `scale: 0.9` dos inputs .formName/.formMail/.formTel.
+  - estados :hover (translateY -2px + sombra maior), :active (scale 0.97) e
+    :focus-visible (outline 3px var(--gold)), iguais aos do `.cta-btn`.
+
+Escopo
+- Apenas CSS novo, nenhuma regra existente foi tocada. HTML inalterado.
+
+Validação (visual)
+- Prints em desktop (1280px) e mobile (390px): botão em pill rosa, mesma largura
+  dos campos, texto legível, cantos arredondados corretos. Tema escuro do SO
+  usa o magenta claro da paleta, consistente com o restante da página.
+- Responsividade OK nos dois tamanhos.

@@ -1,0 +1,63 @@
+Modal de confirmação de envio do formulário (função enviado())
+
+Contexto
+--------
+O botão de submit do formulário (#formulario) já chamava enviado() via
+onclick, mas a função não existia. Pedido: ao clicar, mostrar um retângulo
+central com fade-in, que some quando o usuário clica em qualquer lugar da
+tela, com mensagem de parabéns e um botão que leva a outro site (placeholder).
+
+Alterações
+----------
+index.html
+- Botão de submit: onclick="enviado()" -> onclick="enviado(event)" para a
+  função conseguir dar preventDefault e não recarregar a página.
+
+script.js
+- Nova função global enviado(event):
+  - preventDefault no submit; ignora cliques repetidos se já houver modal.
+  - Monta em JS um overlay .enviado-overlay (role="dialog", aria-modal) com
+    o card .enviado-card contendo título, hint e link.
+  - Título: "Parabéns, esse foi seu primeiro passo para fazer seu salão
+    DECOLAR. Em breve um de nossos vendedores entrará em contato com você."
+    ("DECOLAR" em <em>, destacado em magenta-deep).
+  - Hint: "Enquanto isso, clique aqui para ver mais informações:".
+  - Botão/link .enviado-more -> https://example.com (target=_blank,
+    rel=noopener). PLACEHOLDER: trocar pelo link real (TODO no código).
+  - Fade-in: adiciona .is-visible após forçar reflow (getBoundingClientRect).
+  - Fecha ao clicar em qualquer lugar da tela (listener no overlay) ou com
+    Esc; remove o nó após a transição (280ms). Clique no botão faz
+    stopPropagation pra não fechar antes de navegar.
+  - Respeita prefers-reduced-motion (sem transição, remoção imediata).
+
+style.css (bloco novo "CONFIRMAÇÃO DE ENVIO")
+- .enviado-overlay: position fixed inset:0, z-index 100, flex center,
+  scrim rgba(20,8,14,.58) + backdrop-blur, opacity 0 -> 1 (transition .28s).
+- .enviado-card: max-width 420px, padding 32/28, bg --paper-raised,
+  border 1px --line-strong, border-radius 28px (mesmo raio de outros cards),
+  box-shadow --shadow, entra com translateY(10px) scale(.98) -> 0/1.
+- .enviado-title: font-display, 1.25rem, cor --magenta; <em> em --magenta-deep.
+- .enviado-hint: 0.95rem, cor --ink-soft.
+- .enviado-more: pill (border-radius 100px), bg --magenta, texto #fff, 700;
+  hover -> --magenta-deep + translateY(-2px) + sombra; focus-visible outline
+  --gold (padrão do projeto).
+- Dark mode (@media prefers-color-scheme: dark): scrim rgba(0,0,0,.66),
+  card com bg clareado (color-mix --paper-raised 80% + #fff 20%) e borda
+  --magenta-deep, pra separar o card do fundo escuro do site.
+- @media prefers-reduced-motion: remove transições.
+
+Tokens: usa apenas variáveis da identidade visual (--magenta, --magenta-deep,
+--paper-raised, --ink, --ink-soft, --line-strong, --gold, --shadow,
+--font-display), raio 28px e pill 100px já usados no restante do CSS.
+Nenhum estilo novo fora do guia.
+
+Validação visual (Chrome headless, print)
+-----------------------------------------
+- Desktop 1280 light: card branco centralizado, texto magenta legível, CTA rosa. OK
+- Desktop 1280 dark: card plum clareado + borda magenta, bom contraste. OK
+- Mobile 390 (2x) dark: card centralizado, texto e botão cabem, sem overflow
+  horizontal, fade-in completo. OK
+
+Pendências
+----------
+- Substituir href https://example.com pelo link real de "mais informações".

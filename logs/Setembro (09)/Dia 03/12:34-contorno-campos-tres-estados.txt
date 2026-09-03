@@ -1,0 +1,31 @@
+Contorno (outline) dos campos do formulário: padrão / hover / foco
+
+Arquivo: style.css (regras .formName/.formMail/.formTel)
+
+1) Padrão: contorno rosa da paleta
+   outline: 2px solid var(--magenta);   (#D6007F claro / #FF4FA0 escuro)
+   outline-offset: 2px;
+
+2) Hover: contorno bem estridente
+   .formName/.formMail/.formTel:hover {
+     outline: 3px solid #ff1cc4;   (rosa neon/fuchsia, mais grosso que o padrão)
+     outline-offset: 2px;
+   }
+
+3) Foco (campo selecionado): um pouco mais claro que o padrão
+   .formName/.formMail/.formTel:focus {
+     outline: 2px solid color-mix(in srgb, var(--magenta) 55%, white);
+     outline-offset: 2px;
+   }
+   Regra vem depois da :hover -> com o campo focado e sob o mouse, vence o
+   contorno claro (não o estridente).
+
+transition: outline-color 0.18s p/ suavizar as trocas de cor.
+
+Observação (não alterado): a regra base está com "color: pink" no texto digitado
+(era var(--ink)). Parece edição de teste — rosa claro em fundo branco fica com
+contraste ruim. Não mexi; sugiro voltar p/ var(--ink).
+
+Validação: screenshots da seção .closing em mobile 390px, tema claro e escuro,
+nos 3 estados. Padrão magenta da paleta; hover fuchsia neon 3px, bem destacado;
+foco em rosa claro. Sem piscada ao desfocar.

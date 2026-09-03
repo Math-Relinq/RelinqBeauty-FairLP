@@ -1,0 +1,19 @@
+Alteração: botão "Fala com a gente" (sticky CTA) agora rola a tela até o formulário.
+
+O que mudou
+- index.html: <section class="closing"> ganhou id="formulario".
+- index.html: <a class="cta-btn"> da .sticky-cta ganhou href="#formulario".
+
+Detalhes
+- Rolagem suave já é fornecida por style.css (html { scroll-behavior: smooth } dentro de
+  @media (prefers-reduced-motion: no-preference)).
+- script.js não possui handler de clique em .cta-btn nem preventDefault, então a
+  navegação por âncora nativa funciona sem alterações no JS.
+- Nenhuma mudança visual no botão: .cta-btn já era estilizado como link
+  (text-decoration: none). Ao virar âncora com href, ganha cursor pointer (comportamento
+  esperado de botão).
+
+Verificação
+- Confirmado via DOM dump que id="formulario" existe.
+- Screenshots mobile (390x844) conferidos: sticky CTA continua oculto no topo
+  (translateY(120%)) até o script adicionar .is-visible ao sair da hero — sem regressão.

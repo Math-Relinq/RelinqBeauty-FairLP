@@ -1,0 +1,63 @@
+Validação de e-mail no formulário + feedback de re-tentativa
+===========================================================
+
+Contexto
+--------
+Pedidos:
+1. O campo de e-mail só aceita e-mail válido. Se inválido no envio: a tela
+   sobe até o campo, ele fica vermelho, abre um espaço entre os campos e
+   aparece a mensagem "digite um e-mail válido".
+2. O espaço/gap entre e-mail e telefone só pode existir quando há erro
+   (não pode ficar sempre na tela).
+3. Se a mensagem de erro já está visível e a pessoa tenta de novo com outro
+   e-mail também inválido: o campo dá um "rescale" rápido pra chamar
+   atenção e o texto (que já está na tela) pisca num vermelho mais claro,
+   com brilho.
+
+Alterações
+----------
+index.html
+- Campo de e-mail: type="text" -> type="email", + id="campoEmail",
+  autocomplete="email", aria-describedby="erroEmail".
+- Dentro do mesmo <li>, novo <p class="formError" id="erroEmail" role="alert">
+  com a mensagem "Digite um e-mail válido pra gente conseguir te responder.".
+
+style.css (bloco "Campo com erro de validação")
+- .formError: começa colapsado (max-height:0; opacity:0; overflow:hidden;
+  margin-top:0) -> NÃO ocupa espaço quando não há erro (o gap só existe no
+  estado de erro). Vermelho puro #ff2036, bold.
+- li.has-error .formError: max-height:5.5rem; margin-top:8px; opacity:1
+  -> "abre o espaço" com transição de 0.28s.
+- li.has-error .formField (+ :hover/:focus): texto/borda/contorno vermelhos
+  (#ff2036), outline 3px pra destacar do rosa da paleta.
+- Re-tentativa (classe .is-retry reaplicada via JS):
+  @keyframes erro-pulso  -> scale 0.9 -> 0.965 -> 0.9 no campo (0.42s)
+  @keyframes erro-brilho -> texto vai a #ff8a94 + text-shadow (glow) e volta (0.55s)
+  Ambas desativadas em prefers-reduced-motion: reduce.
+
+script.js (bloco "FORMULÁRIO: validação do e-mail")
+- emailPareceValido(v): regex /^[^\s@]+@[^\s@.]+\.[^\s@]+$/ (sem backtracking).
+- validarEmailFormulario():
+  - válido -> limpa erro, retorna true.
+  - inválido -> adiciona .has-error; se o erro JÁ estava visível, reinicia a
+    animação de atenção (remove .is-retry, força reflow, readiciona);
+    scrollIntoView({block:'center'}) sobe a tela até o campo; focus().
+    Retorna false.
+- input listener: assim que o e-mail passa a ser válido, o erro some sozinho.
+- limparErroEmail() remove .has-error e .is-retry.
+- enviado(): no topo, "if (!validarEmailFormulario()) return;" — não abre a
+  confirmação enquanto o e-mail for inválido.
+
+Testes
+------
+- Lógica (node): 10 casos de e-mail (válidos/ inválidos/ vazio/ espaços/
+  "a@@b.com") -> todos como esperado. node --check: sintaxe OK.
+- Visual (Chrome headless, 390px e 1100px):
+  - pristine: sem gap entre e-mail e telefone; espaçamento igual aos demais
+    campos.
+  - 1º envio inválido: campo vermelho (outline 3px), espaço abre, mensagem
+    vermelha em 2 linhas, confirmação NÃO abre.
+  - re-tentativa inválida (frame do pico congelado): campo levemente maior
+    (0.965) e texto em vermelho claro com glow — visivelmente diferente do
+    1º erro.
+  - e-mail válido: confirmação abre normalmente, sem erro.

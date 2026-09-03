@@ -1,0 +1,26 @@
+Fix: hover não mudava a cor + outline duplicado nos campos do formulário
+
+Arquivo: style.css (regras .formName/.formMail/.formTel)
+
+Problema
+--------
+1. A regra base tinha um outline rosa claro SEMPRE visível (outline: 1px solid
+   rgb(255,192,250) + offset). Somado à border do campo, dava a impressão de
+   "dois contornos" no estado de repouso.
+2. No :hover só trocava de 1px rosa-claro p/ 1px rosa-forte — mudança quase
+   imperceptível; parecia que só reagia ao clique (:focus, que aplica o anel
+   box-shadow magenta).
+
+Correção
+--------
+- Estado de repouso: outline: 2px solid transparent (invisível) -> sobra só a
+  border. Acaba o contorno duplicado.
+- :hover: outline-color: rgb(255, 20, 147) -> o outline transparente de 2px vira
+  rosa estridente. Mudança nítida (nada -> rosa forte).
+- Adicionado outline-color à transition p/ o hover suavizar.
+- :hover movido para antes do :focus, então o estado focado (outline: none +
+  border magenta + anel) continua limpo, sem competir com o hover.
+
+Validação: screenshots da seção .closing em mobile 390px (repouso x hover no
+campo Email). Repouso com um único contorno; hover com outline rosa forte;
+nenhum contorno duplicado.

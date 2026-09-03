@@ -1,0 +1,46 @@
+Formulário: acompanhar teclado virtual + fechar teclado ao enviar
+================================================================
+
+Contexto
+--------
+No mobile, ao focar os campos do formulário (.formField) o teclado virtual
+podia cobrir o input, deixando o usuário digitando "às cegas". Também não
+havia nada que fechasse o teclado quando o envio era disparado com um campo
+ainda focado.
+
+Alterações (script.js — apenas JS, nenhum CSS/HTML tocado)
+---------------------------------------------------------
+1. Novo bloco "FORMULÁRIO: acompanha o teclado virtual no mobile" dentro da
+   IIFE principal:
+   - Ao focar um .formField, após 300ms (tempo do teclado subir) roda
+     keepFieldVisible(): calcula a área realmente visível via
+     window.visualViewport.height (que encolhe quando o teclado abre) e faz
+     window.scrollBy() pra manter o campo dentro da tela, com respiro de
+     16px no topo e 24px acima do teclado.
+   - Reexecuta keepFieldVisible() nos eventos visualViewport 'resize' e
+     'scroll' (disparados quando o teclado abre/fecha ou a página rola com
+     ele aberto), com debounce via requestAnimationFrame.
+   - Fallback: sem visualViewport usa window.innerHeight; respeita
+     prefers-reduced-motion (scroll sem 'smooth').
+
+2. enviado(event): antes de montar o modal, faz blur() no
+   document.activeElement e em todos os .formField, fechando o teclado
+   virtual automaticamente quando o envio acontece com um campo focado.
+
+Validação
+---------
+- node --check script.js: sintaxe OK.
+- Teste Playwright (viewport 390x700):
+  * focar campo não gera erro de página;
+  * ao clicar em enviar com um campo focado, nenhum .formField continua
+    focado (teclado fecharia no mobile real) e o modal de confirmação
+    aparece normalmente;
+  * sem erros de console.
+- Screenshot mobile (390) e desktop (1280): formulário renderiza igual,
+  sem regressão visual (mudança é 100% comportamental).
+
+Observação
+----------
+O acompanhamento do teclado depende da virtual keyboard real (iOS Safari /
+Chrome Android disparam os eventos de visualViewport). Não é reproduzível
+em headless; a lógica foi revisada e o fallback coberto.

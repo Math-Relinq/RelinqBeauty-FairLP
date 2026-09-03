@@ -1,0 +1,16 @@
+Outline dos campos do formulário mais grosso
+
+Arquivo: style.css (regra .formName/.formMail/.formTel)
+
+Antes:
+  outline: rgb(255, 192, 250);          (sem largura/estilo -> não renderizava)
+
+Depois:
+  outline: 4px solid rgb(255, 192, 250);
+  outline-offset: 2px;
+
+Agora o contorno rosa aparece com 4px de espessura e um respiro de 2px em relação
+à borda da pílula.
+
+Validação: screenshots da seção .closing em mobile 390px, tema claro e escuro.
+Contorno visível e uniforme nos dois temas, form centralizado, sem overflow.

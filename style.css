@@ -670,12 +670,21 @@ section {
   outline-offset: 3px;
 }
 
-.micro {
-  margin-top: 0.9rem;
-  font-size: 0.8rem;
-  color: var(--ink-soft);
-  opacity: 0.8;
-  scale: 0.9;
+.closing .form-title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(1.35rem, 4.5vw, 1.7rem);
+  line-height: 1.3;
+  color: var(--ink);
+  max-width: 22rem;
+  margin: 0.9rem auto 0.4rem;
+  text-wrap: balance;
+}
+
+.closing .form-title span {
+  display: block;
+  font-size: 0.75em;
+  color: var(--magenta-deep);
 }
 
 /* ---------- Sticky CTA ---------- */
@@ -781,3 +790,396 @@ footer.brand {
     padding: 3.2rem 0;
   }
 }
+
+/* ---------- Formulário (closing) ---------- */
+.closing .form {
+  list-style: none;
+  margin: 1.4rem auto 0;
+  padding: 0;
+  max-width: 24rem;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  text-align: left;
+}
+
+.formField {
+  width: 100%;
+  padding: 0.95rem 1.4rem;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 500;
+  color: pink;
+  background: var(--paper-raised);
+  border: 1px solid var(--line-strong);
+  border-radius: 100px;
+  box-shadow: var(--shadow);
+  transition: outline-color 0.18s ease, border-color 0.18s ease;
+  -webkit-appearance: none;
+  appearance: none;
+  scale: 0.9;
+  /* contorno rosa padrão, no tom da paleta.
+     largura fixa em 2px; só a cor muda entre os estados (sem "pulo") */
+  outline: 2px solid var(--magenta);
+  outline-offset: 2px;
+}
+
+.formField::placeholder {
+  color: var(--ink-soft);
+  opacity: 0.8;
+}
+
+/* mouse em cima: contorno bem estridente (rosa neon, mais grosso) */
+.formField:hover {
+  outline: 3px solid #ff1cc4;
+  outline-offset: 2px;
+}
+
+/* campo selecionado: contorno um pouco mais claro que o padrão.
+   vem depois do :hover, então vence quando o campo está focado e sob o mouse */
+.formField:focus {
+  outline: 2px solid color-mix(in srgb, var(--magenta) 55%, rgb(121, 1, 105));
+  outline-offset: 2px;
+}
+
+/* ---- Campo com erro de validação (ex.: e-mail inválido) ---- */
+/* mensagem: começa colapsada e "abre um espaço" entre os campos ao aparecer */
+.closing .form .formError {
+  margin: 0 1.4rem;
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  color: #ff2036;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 700;
+  line-height: 1.35;
+  transition: max-height 0.28s ease, opacity 0.24s ease, margin-top 0.28s ease;
+}
+
+.closing .form li.has-error .formError {
+  max-height: 5.5rem;
+  margin-top: 8px;
+  opacity: 1;
+}
+
+/* campo em si fica vermelho enquanto o erro está ativo (vermelho puro,
+   destacado do rosa da paleta; contorno mais grosso pra chamar atenção) */
+.closing .form li.has-error .formField,
+.closing .form li.has-error .formField:hover,
+.closing .form li.has-error .formField:focus {
+  color: #ff5a68;
+  border-color: #ff2036;
+  outline: 3px solid #ff2036;
+  outline-offset: 2px;
+}
+
+.closing .form li.has-error .formField::placeholder {
+  color: color-mix(in srgb, #ff2036 72%, transparent);
+}
+
+/* Nova tentativa com o e-mail ainda inválido: o campo dá um "tranco" rápido
+   de escala (volta pro 0.9 de base) e o texto de erro, que já está na tela,
+   pisca num vermelho mais claro com brilho. Disparado pela classe .is-retry
+   reaplicada via JS. */
+@keyframes erro-pulso {
+  0%   { scale: 0.9; }
+  35%  { scale: 0.965; }
+  70%  { scale: 0.9; }
+}
+
+@keyframes erro-brilho {
+  0%, 100% {
+    color: #ff2036;
+    text-shadow: none;
+  }
+  40% {
+    color: #ff8a94;
+    text-shadow: 0 0 14px rgba(255, 90, 104, 0.85);
+  }
+}
+
+.closing .form li.has-error.is-retry .formField {
+  animation: erro-pulso 0.42s ease;
+}
+
+.closing .form li.has-error.is-retry .formError {
+  animation: erro-brilho 0.55s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .closing .form li.has-error.is-retry .formField,
+  .closing .form li.has-error.is-retry .formError {
+    animation: none;
+  }
+}
+
+/* ---------- Combobox de especialização (custom, translúcido) ---------- */
+/* a escala 0.9 dos campos vai no wrapper, pra lista abrir alinhada ao botão */
+.combo {
+  position: relative;
+  z-index: 1;
+  scale: 0.9;
+}
+
+/* enquanto aberto, a janela precisa passar por cima do botão de envio e do rodapé */
+.combo.is-open {
+  z-index: 40;
+}
+
+/* botão do combo: mesmo pill dos campos, em roxo-escuro translúcido */
+.formSelect.formField {
+  scale: 1;
+  display: flex;
+  align-items: center;
+  text-align: left;
+  cursor: pointer;
+  color: #F8E9EF;
+  background-color: color-mix(in srgb, #3a0b46 72%, transparent);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  padding-right: 3rem;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23F8E9EF' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1.2rem center;
+  background-size: 1rem;
+}
+
+.comboValue {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* enquanto nada foi escolhido, o texto fica com ar de placeholder */
+.formSelect.is-placeholder .comboValue {
+  color: color-mix(in srgb, #F8E9EF 60%, transparent);
+}
+
+/* a janela de seleção: translúcida, com blur, e texto sempre legível */
+.comboList {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(100% + 6px);
+  z-index: 30;
+  margin: 0;
+  padding: 6px;
+  list-style: none;
+  max-height: 264px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  background-color: color-mix(in srgb, #2c0736 82%, transparent);
+  -webkit-backdrop-filter: blur(18px) saturate(1.4);
+  backdrop-filter: blur(18px) saturate(1.4);
+  border: 1px solid color-mix(in srgb, #F8E9EF 22%, transparent);
+  border-radius: 20px;
+  box-shadow: 0 22px 46px -18px rgba(20, 0, 30, 0.7);
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, #F8E9EF 40%, transparent) transparent;
+}
+
+.comboList[hidden] {
+  display: none;
+}
+
+/* abre pra cima quando não há espaço abaixo */
+.comboList--up {
+  top: auto;
+  bottom: calc(100% + 6px);
+}
+
+.comboList::-webkit-scrollbar {
+  width: 8px;
+}
+
+.comboList::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, #F8E9EF 30%, transparent);
+  border-radius: 999px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .comboList {
+    transform-origin: top center;
+    animation: comboIn 0.16s ease;
+  }
+}
+
+@keyframes comboIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
+
+.comboOption {
+  padding: 0.7rem 0.9rem;
+  border-radius: 12px;
+  color: #F8E9EF;
+  font-size: 0.95rem;
+  font-weight: 500;
+  line-height: 1.3;
+  cursor: pointer;
+  /* a sombra garante contraste mesmo com o fundo translúcido */
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
+  transition: background-color 0.12s ease;
+}
+
+.comboOption:hover,
+.comboOption.is-active {
+  background-color: color-mix(in srgb, #F8E9EF 18%, transparent);
+}
+
+.comboOption[aria-selected="true"] {
+  background-color: color-mix(in srgb, #F8E9EF 12%, transparent);
+  font-weight: 700;
+}
+
+/* "Outro" separado do resto da lista */
+.comboOption[data-value="outro"] {
+  margin-top: 4px;
+  padding-top: 0.8rem;
+  border-top: 1px solid color-mix(in srgb, #F8E9EF 16%, transparent);
+  font-weight: 700;
+}
+
+/* campo livre que aparece ao escolher "Outro" */
+.especializacao-outro[hidden] {
+  display: none;
+}
+
+/* botão de envio: mesmo pill magenta do .cta-btn, alinhado à largura dos campos */
+.closing form button[type="submit"] {
+  display: block;
+  width: 100%;
+  max-width: 20rem;
+  margin: 1.4rem auto 0;
+  padding: 0.85rem 1.6rem;
+  font-family: var(--font-body);
+  font-weight: 800;
+  font-size: 0.95rem;
+  color: #FFF6FA;
+  background: var(--magenta);
+  border: 1px solid var(--magenta-deep);
+  border-radius: 100px;
+  box-shadow: 0 14px 30px -12px rgba(148, 0, 79, 0.55);
+  cursor: pointer;
+  scale: 0.9;
+  -webkit-appearance: none;
+  appearance: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.closing form button[type="submit"]:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 34px -12px rgba(148, 0, 79, 0.6);
+}
+
+.closing form button[type="submit"]:active {
+  transform: translateY(0) scale(0.97);
+  box-shadow: 0 10px 22px -12px rgba(148, 0, 79, 0.5);
+}
+
+.closing form button[type="submit"]:focus-visible {
+  outline: 3px solid var(--gold);
+  outline-offset: 3px;
+}
+
+/* ============ CONFIRMAÇÃO DE ENVIO — retângulo central ============ */
+.enviado-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(20, 8, 14, 0.58);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  opacity: 0;
+  transition: opacity 0.28s ease;
+}
+
+.enviado-overlay.is-visible {
+  opacity: 1;
+}
+
+.enviado-card {
+  width: 100%;
+  max-width: 420px;
+  padding: 32px 28px;
+  text-align: center;
+  background: var(--paper-raised);
+  color: var(--ink);
+  border: 1px solid var(--line-strong);
+  border-radius: 28px;
+  box-shadow: var(--shadow);
+  transform: translateY(10px) scale(0.98);
+  transition: transform 0.28s ease;
+}
+
+.enviado-overlay.is-visible .enviado-card {
+  transform: translateY(0) scale(1);
+}
+
+.enviado-title {
+  margin: 0 0 14px;
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  line-height: 1.3;
+  color: var(--magenta);
+}
+
+.enviado-title em {
+  font-style: normal;
+  color: var(--magenta-deep);
+}
+
+.enviado-hint {
+  margin: 0 0 18px;
+  font-size: 0.95rem;
+  color: var(--ink-soft);
+}
+
+.enviado-more {
+  display: inline-block;
+  padding: 12px 26px;
+  border-radius: 100px;
+  background: var(--magenta);
+  color: #fff;
+  font-weight: 700;
+  text-decoration: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.enviado-more:hover {
+  background: var(--magenta-deep);
+  transform: translateY(-2px);
+  box-shadow: 0 14px 30px -12px rgba(148, 0, 79, 0.55);
+}
+
+.enviado-more:focus-visible {
+  outline: 3px solid var(--gold);
+  outline-offset: 3px;
+}
+
+@media (prefers-color-scheme: dark) {
+  .enviado-overlay {
+    background: rgba(0, 0, 0, 0.66);
+  }
+
+  .enviado-card {
+    background: color-mix(in srgb, var(--paper-raised) 80%, #fff);
+    border-color: var(--magenta-deep);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .enviado-overlay,
+  .enviado-card {
+    transition: none;
+  }
+}
+

@@ -1,0 +1,34 @@
+Estados dos campos do formulário (closing): piscada no blur, hover e foco
+
+Arquivo: style.css (regras .formName/.formMail/.formTel)
+
+1) Piscada da borda ao desfocar (blur)
+--------------------------------------
+Causa: no :focus o box-shadow trocava de 1 camada (var(--shadow)) para 1 camada
+(anel magenta), e o outline ia de "2px solid transparent" para "outline: none".
+Como o nº de camadas / a largura mudavam, o navegador não interpolava e dava um
+"pulo" (piscada) ao sair do campo.
+Correção:
+- box-shadow agora tem SEMPRE 2 camadas:
+    repouso:  var(--shadow), 0 0 0 0 transparent
+    :focus:   var(--shadow), 0 0 0 3px color-mix(magenta 20%)
+  -> o anel cresce/some suave de 0 -> 3px, sem snap.
+- outline continua SEMPRE "2px solid" (só a cor muda). No :focus usa
+  outline-color: transparent em vez de outline: none -> sem pulo de largura.
+- transição reduzida p/ 0.18s.
+
+2) Rosa mais forte no hover
+---------------------------
+.formName/.formMail/.formTel:hover agora deixam borda E contorno em
+rgb(255, 20, 147) (deeppink) -> campo claramente mais rosa com o mouse em cima.
+
+3) Borda no rosa da paleta ao selecionar
+----------------------------------------
+:focus -> border-color: var(--magenta) (token da paleta: #D6007F claro /
+#FF4FA0 escuro) + anel suave color-mix(magenta 20%).
+A regra :focus vem depois da :hover, então mesmo com o mouse em cima a borda
+do campo selecionado fica no tom da paleta (não no deeppink do hover).
+
+Validação: screenshots da seção .closing em mobile 390px, tema claro e escuro,
+nos estados repouso / hover / foco. Hover em deeppink, foco com borda magenta da
+paleta + anel, repouso só com a borda. Sem contorno duplicado.

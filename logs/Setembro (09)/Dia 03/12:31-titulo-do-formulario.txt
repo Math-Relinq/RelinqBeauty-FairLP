@@ -1,0 +1,30 @@
+Título do formulário — deixar claro que o micro-copy é o título do form
+
+Contexto
+- O texto "Leva menos de um minuto pra preencher. Sem compromisso." era um <p class="micro">
+  solto antes do <form>, lido como legenda/observação, não como título.
+
+Alterações
+- index.html
+  - Removido o <p class="micro"> e criado <h3 class="form-title" id="form-title"> como
+    primeiro filho do <form>, com o mesmo texto.
+  - "Sem compromisso." virou <span> dentro do h3 (subtítulo em linha separada).
+  - <form> ganhou aria-labelledby="form-title" para acessibilidade.
+- style.css
+  - Removida a regra .closing .micro.
+  - Nova .closing .form-title: fonte de display (var(--font-display)), peso 600,
+    font-size clamp(1.35rem, 4.5vw, 1.7rem), cor var(--ink), max-width 22rem,
+    text-wrap: balance — hierarquia de título acima dos campos.
+  - Nova .closing .form-title span: display block, 0.75em, cor var(--magenta-deep).
+  - .closing .form: margin-top de 2rem -> 1.4rem para aproximar o título dos campos.
+
+Validação visual (modo claro forçado em QA)
+- 390px, 768px e 1200px: o título aparece com tipografia de display, destacado do
+  parágrafo de introdução e claramente ancorado ao bloco do formulário.
+- Responsividade ok nas três larguras; sem quebras em outros trechos da página.
+
+Observações
+- A 4ª linha de input ("Qual a sua especialização?") já estava no arquivo (alteração
+  anterior não relacionada); mantida como está.
+- Tokens usados são os de identidade-visual (font-display, ink, magenta-deep). Sem
+  estilos novos fora do guia.

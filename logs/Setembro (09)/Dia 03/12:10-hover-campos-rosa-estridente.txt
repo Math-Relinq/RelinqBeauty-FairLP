@@ -1,0 +1,20 @@
+Cor do outline no hover dos campos do formulário
+
+Arquivo: style.css (regra :hover de .formName/.formMail/.formTel)
+
+Antes:
+  .forname:hover, .forMail:hover, .forTel:hover {   <- seletores com typo, regra não aplicava
+    outline: 1px solid rgb(255, 255, 250);          <- quase branco
+  }
+
+Depois:
+  .formName:hover, .formMail:hover, .formTel:hover {
+    outline: 1px solid rgb(255, 20, 147);           <- rosa estridente (deeppink)
+    outline-offset: 2px;
+  }
+
+- Corrigidos os nomes das classes para a regra funcionar.
+- Cor trocada para um rosa vibrante ao passar o mouse.
+
+Validação: screenshots da seção .closing em mobile 390px com hover no campo Email,
+tema claro e escuro. Contorno fica rosa forte no hover nos dois temas.

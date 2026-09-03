@@ -1,0 +1,48 @@
+Combobox de especialização no formulário (closing) + opção "Outro" com campo livre
+
+Contexto
+--------
+O campo de texto "Qual a sua especialização?" era um <input type="text"> aberto.
+Vira um combobox (select) com as especialidades da área de beleza e uma opção
+"Outro" que abre um campo de texto livre pra pessoa descrever o que faz.
+
+index.html
+----------
+- Substituído o <input> da especialização por um <select class="formField formSelect"
+  id="especializacao" required>, com:
+  - 1ª opção placeholder desabilitada/selecionada: "Qual a sua especialização?"
+  - opções: Cabeleireiro(a), Colorista, Barbeiro(a), Manicure / Pedicure,
+    Nail Designer, Designer de Sobrancelhas, Lash Designer (extensão de cílios),
+    Maquiador(a), Esteticista, Micropigmentador(a), Depilador(a), Massoterapeuta,
+    Terapeuta capilar / Tricologista, Podólogo(a), Trancista,
+    Designer de Penteados, Dono(a) / Gestor(a) de salão
+  - "Outro" como última opção
+- Novo <li class="especializacao-outro" hidden> com um <input type="text"
+  id="especializacao-outro" placeholder="Conta pra gente: qual a sua área?">,
+  escondido por padrão.
+
+style.css
+---------
+- .formSelect: mesmo pill/contorno dos demais campos (herda de .formField), mas
+  com fundo roxo-escuro translúcido (color-mix(#3a0b46 72%, transparent) +
+  backdrop-filter blur), texto claro (#F8E9EF) e seta (chevron) SVG inline à direita.
+- .formSelect:invalid: enquanto o placeholder está selecionado, o texto fica com
+  opacidade reduzida (ar de placeholder).
+- .formSelect option: cores claras do site (ink sobre paper-raised) pra a lista
+  aberta ficar legível; "Outro" em negrito.
+- .especializacao-outro[hidden] { display: none } pra garantir o toggle.
+
+script.js
+---------
+- Novo bloco no fim da IIFE: ao "change" no #especializacao, se o valor for
+  "outro" mostra o <li> do campo livre (hidden=false) e dá focus nele; caso
+  contrário esconde e limpa o valor.
+
+Validação (visual)
+------------------
+- Screenshots via puppeteer-core + Chrome em 390 / 768 / 1280, tema claro e escuro:
+  - combobox com aparência roxo-escuro translúcida, contraste ok do placeholder
+    e do chevron nos dois temas;
+  - ao escolher "Outro", o campo "Conta pra gente: qual a sua área?" aparece logo
+    abaixo, já focado;
+  - layout do formulário e do restante da seção inalterados; responsivo ok.

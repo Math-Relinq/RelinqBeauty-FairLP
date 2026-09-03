@@ -1,0 +1,30 @@
+Destaque no texto de apoio do formulário (.micro)
+================================================
+
+Contexto
+--------
+Linha "Leva menos de um minuto pra preencher. Sem compromisso." logo acima
+do formulário da seção .closing. Estava apagada demais: além de herdar
+cor/tamanho de `.closing p` (ink-soft, 1.02rem), tinha `opacity: 0.8` e
+`scale: 0.9`, ficando quase ilegível.
+
+Alteração (style.css)
+---------------------
+- Seletor trocado de `.micro` para `.closing .micro` para ganhar
+  especificidade sobre `.closing p` (antes as regras de cor/tamanho não
+  aplicavam).
+- font-size: 1.05rem (um pouco maior, antes renderizava ~0.92rem).
+- font-weight: 600 (levemente mais chamativo, mesmo peso dos <strong>).
+- color: var(--magenta-deep) — mesma cor da `.closing .script-line`,
+  dentro da identidade visual.
+- Removidos `opacity: 0.8` e `scale: 0.9`.
+- Adicionado `margin-bottom: 1.9rem` para manter o respiro que vinha de
+  `.closing p` antes da mudança de especificidade.
+
+Validação visual
+----------------
+Screenshots full-page via CDP (headless Chrome), seção closing:
+- Mobile 390px: claro e escuro — OK
+- Desktop 1280px: escuro — OK
+O texto agora se destaca do parágrafo cinza acima, sem competir com o
+título nem com o botão. Sem outras mudanças de layout.

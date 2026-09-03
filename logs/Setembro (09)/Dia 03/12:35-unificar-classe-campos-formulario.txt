@@ -1,0 +1,27 @@
+Unificação das classes dos campos do formulário (closing)
+
+Contexto
+- Os 4 inputs do <ul class="form"> usavam classes distintas: formName, formMail e
+  formTel (esta repetida em dois campos). O CSS estava duplicado em grupos de
+  seletores (.formName, .formMail, .formTel) para base, ::placeholder, :hover e :focus.
+
+Alteração
+- index.html: todos os 4 inputs passam a usar uma única classe class="formField".
+- style.css: os 4 grupos de seletores foram colapsados para um único seletor:
+    .formName, .formMail, .formTel        -> .formField
+    .formName::placeholder, ...           -> .formField::placeholder
+    .formName:hover, ...                  -> .formField:hover
+    .formName:focus, ...                  -> .formField:focus
+  Nenhuma regra/declaração foi alterada — apenas a lista de seletores.
+
+Classificação: visual (refator sem mudança de aparência).
+
+Verificação
+- Prints em 390px (mobile) e 1280px (desktop): os 4 campos (Nome, Email,
+  Telefone (+55), Qual a sua especialização?) renderizam idênticos entre si e
+  iguais ao estado anterior — mesmo pill, mesmo contorno magenta duplo, mesmo
+  espaçamento; botão "Dar um UP no meu negocio" inalterado.
+- grep confirmou que não restam referências a formName/formMail/formTel em
+  html/css/js.
+
+Identidade visual: sem novos tokens; regras existentes preservadas.

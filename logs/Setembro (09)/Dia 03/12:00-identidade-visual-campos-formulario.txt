@@ -1,0 +1,30 @@
+Identidade visual nos campos do formulário (closing) + espaçamento
+
+Arquivo: style.css (bloco .formName/.formMail/.formTel, ~linha 785)
+
+O que foi alterado
+------------------
+Antes:
+  .formName, .formMail, .formTel { border-radius: 5px; scale: 1.15; display: flex; align-items: center; }
+  (scale: 1.15 distorcia o layout; sem cor/borda/fonte da marca; sem espaçamento entre campos)
+
+Depois:
+- Novo bloco ".closing .form": remove marcadores da <ul>, centraliza (max-width 24rem,
+  margin auto), vira flex column com gap: 25px  -> ~25px entre cada campo.
+- Campos (.formName/.formMail/.formTel) alinhados aos tokens de identidade-visual/style.css:
+  - fundo var(--paper-raised), borda 1px var(--line-strong)
+  - border-radius: 100px (pílula, igual .cta-btn / controles clicáveis do guia)
+  - box-shadow: var(--shadow) (elevação "papel elevado")
+  - font-family var(--font-body) (Manrope), font-size 1rem, cor var(--ink)
+  - placeholder cor var(--ink-soft), opacity .8
+  - width: 100%, padding 0.95rem 1.4rem, appearance: none
+  - :focus  -> borda var(--magenta) + halo color-mix magenta 22%
+  - :focus-visible -> outline 3px var(--gold) offset 2px (mesmo padrão do .cta-btn)
+
+Validação
+---------
+Screenshots da seção .closing geradas com Chromium headless:
+- mobile 390px  claro / escuro / escuro com foco
+- desktop 1280px claro / com foco
+Campos consistentes com a paleta nos dois temas, espaçamento de 25px uniforme,
+form centralizado e sem overflow horizontal. Nada fora do formulário foi alterado.
