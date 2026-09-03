@@ -123,10 +123,14 @@ a { color: inherit; }
 .spark svg { width: 100%; height: 100%; display: block; }
 
 /* ---------- Hero ---------- */
+/* A hero ocupa exatamente uma tela (viewport pequeno) em qualquer aparelho:
+   imagem em cima, título + seta sempre visíveis embaixo. A altura é travada em
+   100svh para o conteúdo nunca "vazar" quando a barra do navegador está aberta. */
 .hero {
   position: relative;
   width: 100%;
-  min-height: 100vh;
+  height: 100vh;          /* fallback p/ navegadores sem unidades svh/dvh */
+  height: 100svh;
   min-height: 100svh;
   display: flex;
   flex-direction: column;
@@ -136,15 +140,17 @@ a { color: inherit; }
   overflow: hidden;
 }
 
-/* imagem retrato: ocupa a largura toda no mobile, vira um cartão centrado no desktop */
+/* imagem retrato: ocupa a largura toda no mobile, vira um cartão centrado no desktop.
+   flex: 0 1 auto + min-height: 0 => pode ENCOLHER se o título precisar de mais espaço,
+   mas nunca cresce além da base (58svh). Sem min/max em px, que quebravam telas
+   muito curtas (imagem tomava tudo) ou muito altas. */
 .hero-media {
   position: relative;
-  flex: 0 0 auto;
+  flex: 0 1 auto;          /* nunca cresce além de 58svh; encolhe se faltar espaço */
   width: 100%;
   height: 58vh;
   height: 58svh;
-  min-height: 340px;
-  max-height: 600px;
+  min-height: 0;
   overflow: hidden;
 }
 
@@ -173,15 +179,19 @@ a { color: inherit; }
   pointer-events: none;
 }
 
-/* o texto fica logo abaixo da imagem, sem sobrepô-la; a seta vai pro pé da tela */
+/* o texto fica logo abaixo da imagem, sem sobrepô-la; a seta vai pro pé da tela.
+   flex: 1 1 auto + min-height: 0 => preenche o espaço que sobra e garante que a
+   seta (margin-top: auto) fique ancorada no pé da tela em qualquer aparelho. */
 .hero-copy {
   position: relative;
   z-index: 2;
-  flex: 1 1 auto;
+  flex: 1 0 auto;          /* preenche o espaço livre e NÃO encolhe: o título e a
+                              seta sempre cabem; quem cede espaço é a imagem */
+  min-height: 0;
   width: 100%;
   max-width: 720px;
   margin: 0 auto;
-  padding: clamp(1.6rem, 4.5vh, 3rem) 1.4rem calc(1.5rem + env(safe-area-inset-bottom));
+  padding: clamp(1.1rem, 3.5vh, 2.6rem) 1.4rem calc(1.2rem + env(safe-area-inset-bottom));
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -191,11 +201,16 @@ a { color: inherit; }
   font-family: var(--font-display);
   font-weight: 600;
   font-style: italic;
-  font-size: clamp(2.3rem, 8vw, 3.4rem);
+  /* em telas normais é idêntico a 8vw; o min(…,8.2vh) só entra em telas MUITO
+     baixas (tela dividida, foldables) p/ o título não empurrar a seta pra fora */
+  font-size: clamp(2.3rem, min(8vw, 8.2vh), 3.4rem);
   line-height: 1.1;
   letter-spacing: -0.01em;
   max-width: 16ch;
-  margin: 0;
+  /* margin-top: auto => o espaço livre da coluna se divide igualmente acima do
+     título e abaixo dele (até a seta), deixando o título ~centrado na faixa
+     escura em qualquer altura de tela, como no layout de referência */
+  margin: auto 0 0;
   text-wrap: balance;
   color: var(--ink);
 }
@@ -207,27 +222,72 @@ a { color: inherit; }
 }
 
 /* seta que rola para a próxima seção — ancorada no pé da tela */
-.scroll-cue {
+.scroll-cue-group {
   margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(0.4rem, 1.6vw, 0.7rem);
+}
+
+/* chamada rosa acima da seta — pequena, mas chamativa (script da identidade) */
+.scroll-cue-label {
+  margin: 0;
+  font-family: var(--font-script);
+  font-weight: 700;
+  font-size: clamp(1.15rem, 4.6vw, 1.5rem);
+  line-height: 1;
+  color: var(--magenta);
+  text-align: center;
+  letter-spacing: 0.01em;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .scroll-cue-label { animation: cue-label-bob 1.8s ease-in-out infinite; }
+}
+@keyframes cue-label-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-2px); }
+}
+
+.scroll-cue {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 3rem;
-  height: 3rem;
+  width: clamp(3.4rem, 12vw, 4.1rem);
+  height: clamp(3.4rem, 12vw, 4.1rem);
   padding: 0;
-  border: 1px solid var(--line-strong);
+  border: 1.5px solid var(--magenta);
   border-radius: 100px;
   background: var(--paper-raised);
   color: var(--magenta);
   cursor: pointer;
-  box-shadow: var(--shadow);
-  transition: transform 0.25s ease, color 0.25s ease;
+  box-shadow: 0 10px 26px -12px rgba(148, 0, 79, 0.4), var(--shadow);
+  transition: transform 0.25s ease, color 0.25s ease, box-shadow 0.25s ease;
   -webkit-tap-highlight-color: transparent;
+}
+/* halo pulsante — destaque discreto, seguro em tema claro/escuro (currentColor) */
+.scroll-cue::before {
+  content: "";
+  position: absolute;
+  inset: -1.5px;
+  border-radius: inherit;
+  border: 2px solid currentColor;
+  opacity: 0;
+  pointer-events: none;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .scroll-cue::before { animation: cue-ring 2.4s ease-out infinite; }
+}
+@keyframes cue-ring {
+  0% { opacity: 0.55; transform: scale(1); }
+  70%, 100% { opacity: 0; transform: scale(1.55); }
 }
 .scroll-cue:hover,
 .scroll-cue:focus-visible {
   transform: translateY(3px);
   color: var(--magenta-deep);
+  box-shadow: 0 14px 30px -12px rgba(148, 0, 79, 0.5), var(--shadow);
 }
 .scroll-cue:focus-visible { outline: 2px solid var(--gold); outline-offset: 4px; }
 

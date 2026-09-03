@@ -1,0 +1,45 @@
+Destaque no botão de rolagem (scroll-cue) + chamada rosa acima
+================================================================
+
+Solicitação
+-----------
+- Aumentar um pouco o botão de seta do hero, mantendo escala e
+  responsividade entre telas.
+- Dar destaque ao botão.
+- Acima dele, um texto rosa "não muito grande, mas chamativo":
+  "ainda curioso? clique aqui".
+
+Alterações
+----------
+index.html
+- O <button class="scroll-cue"> passou a ficar dentro de
+  <div class="scroll-cue-group">, que agora carrega o margin-top:auto
+  (ancoragem no pé do hero) e empilha rótulo + botão centralizados.
+- Novo <p class="scroll-cue-label">ainda curioso? clique aqui</p>.
+- SVG da seta de 24 -> 26 px (acompanha o botão maior).
+
+style.css (bloco ".scroll-cue")
+- .scroll-cue-group: flex coluna, align-items center,
+  gap clamp(0.4rem, 1.6vw, 0.7rem), margin-top:auto.
+- .scroll-cue-label: fonte script da identidade (var(--font-script),
+  Caveat), weight 700, cor var(--magenta), tamanho
+  clamp(1.15rem, 4.6vw, 1.5rem), leve bob de -2px (só com
+  prefers-reduced-motion: no-preference).
+- .scroll-cue: tamanho 3rem fixo -> clamp(3.4rem, 12vw, 4.1rem) em
+  largura e altura; borda 1px var(--line-strong) -> 1.5px
+  var(--magenta); sombra reforçada
+  (0 10px 26px -12px rgba(148,0,79,.4) + var(--shadow)).
+- Novo ::before: halo pulsante (border 2px currentColor, escala 1 ->
+  1.55, opacidade .55 -> 0, 2.4s infinito) — usa currentColor, então
+  funciona nos temas claro e escuro. Só anima com
+  prefers-reduced-motion: no-preference.
+- Hover/focus: sombra um pouco mais forte além do translateY(3px).
+
+Validação (visual)
+------------------
+Screenshots headless (google-chrome) do hero:
+- 390x900, 768x900, 1280x900: rótulo rosa + botão maior visíveis,
+  ancorados no pé, escala consistente.
+- 360x640 (tela curta): título, rótulo e botão ainda cabem com folga.
+Nada mais no layout mudou; o nth-child(2) da animação hero-in agora
+recai sobre .scroll-cue-group (mesmo efeito de entrada).

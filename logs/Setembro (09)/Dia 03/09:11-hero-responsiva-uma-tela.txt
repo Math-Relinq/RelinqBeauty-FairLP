@@ -1,0 +1,49 @@
+Hero: cabe em exatamente uma tela em qualquer dispositivo
+=========================================================
+
+Problema relatado
+-----------------
+- Em alguns aparelhos a imagem da hero tomava a tela inteira.
+- Em outros, a seta de rolagem no rodape da hero nao aparecia (ficava abaixo da dobra).
+- Objetivo: a 1a secao deve ficar igual ao layout de referencia (imagem em cima,
+  titulo no meio da faixa escura, seta no pe) em TODOS os tamanhos de tela.
+
+Causa raiz (style.css)
+----------------------
+1. .hero usava so `min-height: 100svh` (sem travar altura). Como .hero-media tinha
+   `height: 58svh` FIXO e .hero-copy `flex: 1 1 auto`, quando o titulo quebrava em
+   mais linhas (telas estreitas, fonte Fraunces carregando tarde, fontes grandes do
+   SO) a soma passava de 100svh e a hero crescia -> a seta caia abaixo da dobra.
+2. .hero-media tinha `min-height: 340px` e `max-height: 600px` em px. Em telas
+   curtas 340px viravam quase a tela toda (imagem "tomando tudo"); a base fixa
+   tambem brigava com qualquer tentativa de encolher.
+
+Correcao
+--------
+- .hero: `height: 100svh` (com `100vh` de fallback antes) + `min-height: 100svh`.
+  Altura travada no viewport pequeno -> conteudo nunca vaza com a barra do
+  navegador aberta.
+- .hero-media: `flex: 0 1 auto` + `min-height: 0`; removidos `min-height: 340px` e
+  `max-height: 600px`. A imagem nunca cresce alem de 58svh, mas CEDE espaco se o
+  titulo precisar.
+- .hero-copy: `flex: 1 0 auto` (nao encolhe) + `min-height: 0` e padding vertical
+  um pouco menor. Titulo e seta sempre cabem; quem abre mao de espaco e a imagem.
+- .hero h1: `margin: auto 0 0` -> o espaco livre da coluna se divide acima e
+  abaixo do titulo, deixando-o ~centrado na faixa escura como na referencia.
+  font-size `clamp(2.3rem, min(8vw, 8.2vh), 3.4rem)` -> identico ao 8vw antigo em
+  telas normais; o cap de 8.2vh so entra em telas MUITO baixas (tela dividida,
+  foldables) pra o titulo nao empurrar a seta pra fora.
+- Desktop/tablet (>=640px): mantido o tratamento de cartao centrado ja existente;
+  so passou a herdar o novo modelo flex sem quebrar.
+
+Validacao (prints, chrome headless, DPR 1)
+-----------------------------------------
+320x568, 360x640, 375x667, 390x844, 414x896, 412x915  -> imagem ~55-58% no topo,
+  titulo centrado na faixa escura, seta 100% visivel no pe. OK
+768x1024, 834x1112 (tablet) e 1280x800, 1440x900 (desktop) -> cartao centrado +
+  titulo + seta, tudo dentro do viewport. OK
+844x390 (paisagem) -> cai no layout de cartao (>=640px), seta visivel. OK
+
+Arquivos alterados
+------------------
+- style.css (bloco .hero / .hero-media / .hero-copy / .hero h1)
