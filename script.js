@@ -260,13 +260,19 @@
 
     function choose(opt) {
       options.forEach(function (o) { o.setAttribute('aria-selected', String(o === opt)); });
-      comboValor.value = opt.getAttribute('data-value');
       comboLabel.textContent = opt.textContent;
       comboBtn.classList.remove('is-placeholder');
 
-      var isOutro = comboValor.value === 'outro';
+      // "Outro": o valor da especialização passa a ser o texto que a pessoa
+      // digitar no campo livre (fica gravado na mesma variável das outras opções).
+      var isOutro = opt.getAttribute('data-value') === 'outro';
       if (especOutroWrap) especOutroWrap.hidden = !isOutro;
       if (especOutroInput && !isOutro) especOutroInput.value = '';
+      if (isOutro) {
+        comboValor.value = especOutroInput ? especOutroInput.value.trim() : '';
+      } else {
+        comboValor.value = opt.getAttribute('data-value');
+      }
 
       closeList(true);
       if (isOutro && especOutroInput) especOutroInput.focus();
@@ -306,6 +312,16 @@
       opt.addEventListener('click', function () { choose(opt); });
       opt.addEventListener('mouseenter', function () { setActive(i); });
     });
+
+    // enquanto "Outro" estiver ativo, o texto digitado vai direto pra mesma
+    // variável usada pelas demais opções (#especializacaoValor)
+    if (especOutroInput) {
+      especOutroInput.addEventListener('input', function () {
+        if (especOutroWrap && !especOutroWrap.hidden) {
+          comboValor.value = especOutroInput.value.trim();
+        }
+      });
+    }
   }
 })();
 
@@ -359,12 +375,36 @@ if (campoEmail) {
   });
 }
 
+// ---------- ENVIO DOS DADOS DO FORMULÁRIO PARA A API ----------
+// Recebe os dados coletados do formulário e faz o envio para a API.
+// TODO: implementar a chamada à API.
+async function sendForm(data, callback) {
+  const jsonFormData = JSON.stringify(data)
+  //envia o json e pega o status de envio
+  //chama callback repassando status de envio
+}
+
 // ---------- CONFIRMAÇÃO DE ENVIO: retângulo central com fade-in ----------
 function enviado(event) {
   if (event && typeof event.preventDefault === 'function') event.preventDefault();
 
   // e-mail precisa ser válido; se não for, marca o campo e não abre a confirmação
   if (!validarEmailFormulario()) return;
+
+  // coleta os dados do formulário e dispara o envio para a API
+  var formElement = document.querySelector('form');
+  var campoNome = formElement ? formElement.querySelector('input[type="text"].formField') : null;
+  var campoTel = document.getElementById('campoTelefone');
+  var campoEspec = document.getElementById('especializacaoValor');
+  var dadosFormulario = {
+    nome: campoNome ? campoNome.value.trim() : '',
+    email: campoEmail ? campoEmail.value.trim() : '',
+    telefone: campoTel ? campoTel.value.trim() : '',
+    especializacao: campoEspec ? campoEspec.value : '',
+  };
+  sendForm(dadosFormulario, (res) => {
+    //recebe o status do envio da sendForm, e se for erro exibe um window.alert() e recarrega a pagina
+  });
 
   // fecha o teclado virtual caso o envio seja disparado com um campo focado
   var focado = document.activeElement;

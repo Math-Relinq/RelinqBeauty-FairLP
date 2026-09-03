@@ -1,0 +1,16 @@
+Alteração (lógica) em script.js — combobox de especialização:
+
+Objetivo: quando a pessoa escolhe "Outro" e digita uma especialização, esse
+texto passa a ser gravado em #especializacaoValor (a MESMA variável usada pelas
+demais opções). Assim o JSON do formulário usa só 1 campo `especializacao`.
+
+Mudanças:
+- choose(): `isOutro` agora deriva de opt data-value (não mais de comboValor.value,
+  que passou a poder conter texto livre). Se "Outro": comboValor.value recebe o
+  texto atual do campo livre (trim); senão recebe o data-value da opção.
+- Novo listener `input` em #especializacao-outro: enquanto o wrap "Outro" estiver
+  visível, cada tecla atualiza comboValor.value com o texto digitado (trim).
+- enviado(): sem mudança — já lia apenas campoEspec.value.
+
+Verificação: `node --check script.js` OK. Trace manual dos fluxos
+(opção normal / Outro vazio / Outro digitado / voltar pra opção normal) OK.

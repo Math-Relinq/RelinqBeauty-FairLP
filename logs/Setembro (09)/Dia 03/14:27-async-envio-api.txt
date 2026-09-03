@@ -1,0 +1,9 @@
+Alteração (não visual / lógica) em script.js:
+
+- Criada a função assíncrona vazia `enviarFormularioParaApi(dados)` (a implementação
+  do fetch/envio à API será feita pelo usuário; contém apenas um TODO).
+- A função `enviado(event)` agora, após validar o e-mail, coleta os dados do
+  formulário (nome, email, telefone, especializacao, especializacaoOutro) em um
+  objeto `dadosFormulario` e chama `enviarFormularioParaApi(dadosFormulario)`.
+
+Verificação: `node --check script.js` OK.
