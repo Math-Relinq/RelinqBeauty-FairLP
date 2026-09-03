@@ -55,8 +55,15 @@ body {
 }
 
 /* ---------- Barra de rolagem (paleta do site) ---------- */
+/* Fica oculta; só aparece enquanto a página está sendo rolada (JS adiciona
+   .is-scrolling no <html> e remove 1s depois que o movimento para). A largura
+   do trilho é reservada o tempo todo pra não haver deslocamento do layout. */
 html {
   scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+}
+
+html.is-scrolling {
   scrollbar-color: var(--magenta) transparent;
 }
 
@@ -66,13 +73,18 @@ html {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--magenta);
+  background: transparent;
   border-radius: 999px;
   border: 3px solid transparent;
   background-clip: padding-box;
+  transition: background-color 0.35s ease;
 }
 
-::-webkit-scrollbar-thumb:hover {
+html.is-scrolling::-webkit-scrollbar-thumb {
+  background: var(--magenta);
+}
+
+html.is-scrolling::-webkit-scrollbar-thumb:hover {
   background: var(--magenta-deep);
 }
 
@@ -970,7 +982,7 @@ footer.brand {
   max-height: 264px;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
-  background-color: color-mix(in srgb, #2c0736 82%, transparent);
+  background-color: color-mix(in srgb, #2c0736 66%, transparent);
   -webkit-backdrop-filter: blur(18px) saturate(1.4);
   backdrop-filter: blur(18px) saturate(1.4);
   border: 1px solid color-mix(in srgb, #F8E9EF 22%, transparent);

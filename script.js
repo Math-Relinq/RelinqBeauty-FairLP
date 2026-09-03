@@ -325,6 +325,21 @@
   }
 })();
 
+// ---------- BARRA DE ROLAGEM: só visível enquanto a página é rolada ----------
+// Ao rolar, marca o <html> com .is-scrolling; 1s depois que o movimento para,
+// a classe sai e a barra some de novo.
+(function () {
+  var root = document.documentElement;
+  var timer = null;
+  window.addEventListener('scroll', function () {
+    root.classList.add('is-scrolling');
+    if (timer) clearTimeout(timer);
+    timer = setTimeout(function () {
+      root.classList.remove('is-scrolling');
+    }, 1000);
+  }, { passive: true });
+})();
+
 // ---------- FORMULÁRIO: validação do e-mail ----------
 var campoEmail = document.getElementById('campoEmail');
 var liEmail = campoEmail ? campoEmail.closest('li') : null;

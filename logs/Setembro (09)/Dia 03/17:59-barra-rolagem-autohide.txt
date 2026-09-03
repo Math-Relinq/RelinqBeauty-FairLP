@@ -1,0 +1,20 @@
+Alteração (visual + JS) — barra de rolagem da página com auto-hide.
+
+style.css (bloco "Barra de rolagem"):
+- html: scrollbar-color passa a "transparent transparent" (oculta no Firefox).
+  Nova regra html.is-scrolling -> scrollbar-color: var(--magenta) transparent.
+- ::-webkit-scrollbar-thumb: background transparent + transition background-color 0.35s.
+  Largura do ::-webkit-scrollbar mantida em 12px sempre (sem deslocamento de layout).
+- Novas regras: html.is-scrolling::-webkit-scrollbar-thumb { background: var(--magenta) }
+  e :hover { var(--magenta-deep) }. O hover deixou de valer fora do estado "rolando".
+
+script.js (novo bloco após a IIFE principal):
+- Listener passivo de 'scroll' no window: adiciona .is-scrolling em <html>,
+  e um setTimeout de 1000ms (reiniciado a cada evento) remove a classe quando
+  o movimento para.
+
+Verificação: node --check script.js OK. Screenshots headless (Chrome):
+- em repouso: nenhuma barra visível, layout sem deslocamento;
+- com .is-scrolling: thumb magenta visível na borda direita.
+
+Limpeza: removidos arquivos temporários de screenshot (__*.html, scratch_shot.js).

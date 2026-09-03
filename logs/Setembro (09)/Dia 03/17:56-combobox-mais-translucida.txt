@@ -1,0 +1,11 @@
+Alteração (visual) em style.css — .comboList (janela do combobox de especialização):
+
+- background-color: color-mix(in srgb, #2c0736 82%, transparent)
+               ->  color-mix(in srgb, #2c0736 66%, transparent)
+  (janela ~16 pontos mais translúcida; o conteúdo atrás fica mais perceptível)
+- Blur mantido intacto: backdrop-filter: blur(18px) saturate(1.4).
+
+Verificação visual: screenshots headless (Chrome) com a lista aberta em
+390px (mobile) e 1280px (desktop), comparação A/B antes(82%)/depois(66%).
+As opções continuam legíveis; o blur segue visível (texto de fundo borrado).
+Nenhum outro estilo alterado.
