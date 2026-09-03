@@ -974,7 +974,8 @@ footer.brand {
   -webkit-backdrop-filter: blur(18px) saturate(1.4);
   backdrop-filter: blur(18px) saturate(1.4);
   border: 1px solid color-mix(in srgb, #F8E9EF 22%, transparent);
-  border-radius: 20px;
+  /* borda direita mais curvada que a esquerda */
+  border-radius: 20px 34px 34px 20px;
   box-shadow: 0 22px 46px -18px rgba(20, 0, 30, 0.7);
   scrollbar-width: thin;
   scrollbar-color: color-mix(in srgb, #F8E9EF 40%, transparent) transparent;
