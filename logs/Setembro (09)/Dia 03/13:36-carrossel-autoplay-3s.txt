@@ -1,0 +1,20 @@
+Carrossel do mockup: autoplay a cada 3s
+
+O carrossel de telas dentro do iPhone já tinha avanço automático, mas a cada
+5,5s. Reduzido para 3s.
+
+script.js
+---------
+- restartAuto(): intervalo do setInterval passou de 5500 para 3000ms
+  (extraído para a const AUTO_DELAY = 3000).
+- Comportamento mantido: só roda enquanto o telefone está visível na tela
+  (IntersectionObserver), reinicia a contagem a cada interação do usuário
+  (swipe, setas, dots, wheel, teclado) e respeita prefers-reduced-motion.
+
+Teste (lógico, via puppeteer)
+-----------------------------
+- Página carregada, telefone trazido para a viewport.
+- scrollLeft do .carousel-track:
+  - inicial: 0
+  - ~3,4s depois: 244 (≈ 1 largura de slide) -> avançou
+  - ~6,4s depois: 490 -> avançou de novo

@@ -64,12 +64,14 @@
       });
     }, { passive: true });
 
+    // avança sozinho a cada 3s (reinicia a contagem a cada interação)
+    var AUTO_DELAY = 3000;
     function restartAuto() {
       if (reduce) return;
       clearInterval(autoTimer);
       autoTimer = setInterval(function () {
         goTo((current + 1) % slides.length, false);
-      }, 5500);
+      }, AUTO_DELAY);
     }
     ['pointerdown', 'touchstart', 'wheel', 'keydown'].forEach(function (ev) {
       track.addEventListener(ev, restartAuto, { passive: true });
