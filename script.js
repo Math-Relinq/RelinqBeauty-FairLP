@@ -449,7 +449,7 @@ async function enviado(event) {
 
   var moreLink = document.createElement('a');
   moreLink.className = 'enviado-more';
-  moreLink.href = 'https://relinqbeauty.com.br/lpcamisa'; // TODO: trocar pelo link real
+  moreLink.href = ''; // TODO: trocar pelo link real
   moreLink.target = '_blank';
   moreLink.rel = 'noopener';
   moreLink.textContent = 'Ver mais informações';
