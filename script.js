@@ -274,6 +274,11 @@
         comboValor.value = opt.getAttribute('data-value');
       }
 
+      // escolher uma opção já resolve o erro de "campo obrigatório" do combo
+      var liCombo = comboBtn.closest('li');
+      if (liCombo) liCombo.classList.remove('has-error', 'is-retry');
+      if (!isOutro && especOutroWrap) especOutroWrap.classList.remove('has-error', 'is-retry');
+
       closeList(true);
       if (isOutro && especOutroInput) especOutroInput.focus();
     }
@@ -352,43 +357,115 @@ function limparErroEmail() {
   if (liEmail) liEmail.classList.remove('has-error', 'is-retry');
 }
 
-// Valida o campo. Se estiver inválido: marca o <li> com .has-error (deixa o
-// campo vermelho e abre o espaço com a mensagem), sobe a tela até o campo e
-// foca nele. Se o erro JÁ estava na tela e o e-mail continua inválido, dá um
-// pulso rápido no campo + brilho no texto pra chamar a atenção.
+// Marca um <li> com .has-error (deixa o campo vermelho e abre o espaço com a
+// mensagem). Se o erro JÁ estava na tela, reaplica o pulso de atenção
+// (.is-retry) removendo/forçando reflow/readicionando a classe.
+function marcarErroCampo(li, reanimar) {
+  if (!li) return;
+  var erroJaVisivel = li.classList.contains('has-error');
+  li.classList.add('has-error');
+  if (erroJaVisivel && reanimar) {
+    li.classList.remove('is-retry');
+    void li.offsetWidth;
+    li.classList.add('is-retry');
+  }
+}
+
+function limparErroCampo(li) {
+  if (li) li.classList.remove('has-error', 'is-retry');
+}
+
+// Valida TODOS os campos obrigatórios (nome, e-mail, telefone e especialização).
+// Marca cada campo inválido, rola a tela até o primeiro deles e foca nele.
 // Devolve true/false pro fluxo de envio saber se pode seguir.
-function validarEmailFormulario() {
-  if (!campoEmail || !liEmail) return true;
+function validarFormulario() {
+  var form = document.querySelector('form');
+  if (!form) return true;
 
-  if (emailPareceValido(campoEmail.value)) {
-    limparErroEmail();
-    return true;
+  var campoNome = document.getElementById('campoNome');
+  var campoTel = document.getElementById('campoTelefone');
+  var comboBtn = document.getElementById('especializacao');
+  var comboValor = document.getElementById('especializacaoValor');
+  var liOutro = document.querySelector('.especializacao-outro');
+  var campoOutro = document.getElementById('especializacao-outro');
+  var outroAtivo = !!(liOutro && !liOutro.hidden);
+
+  // se já existe erro na tela, os campos ainda inválidos ganham o pulso extra
+  var reanimar = !!document.querySelector('.closing .form li.has-error');
+  var primeiroInvalido = null;
+
+  // Nome
+  var liNome = campoNome ? campoNome.closest('li') : null;
+  if (campoNome && campoNome.value.trim() === '') {
+    marcarErroCampo(liNome, reanimar);
+    primeiroInvalido = primeiroInvalido || campoNome;
+  } else {
+    limparErroCampo(liNome);
   }
 
-  var erroJaVisivel = liEmail.classList.contains('has-error');
-  liEmail.classList.add('has-error');
-
-  if (erroJaVisivel) {
-    // reinicia a animação de atenção (remove, força reflow, readiciona)
-    liEmail.classList.remove('is-retry');
-    void liEmail.offsetWidth;
-    liEmail.classList.add('is-retry');
+  // E-mail (mesma regra de formato de antes)
+  if (campoEmail && liEmail) {
+    if (emailPareceValido(campoEmail.value)) {
+      limparErroEmail();
+    } else {
+      marcarErroCampo(liEmail, reanimar);
+      primeiroInvalido = primeiroInvalido || campoEmail;
+    }
   }
 
-  var reduzir = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  campoEmail.scrollIntoView({ behavior: reduzir ? 'auto' : 'smooth', block: 'center' });
-  campoEmail.focus({ preventScroll: true });
-  return false;
+  // Telefone
+  var liTel = campoTel ? campoTel.closest('li') : null;
+  if (campoTel && campoTel.value.trim() === '') {
+    marcarErroCampo(liTel, reanimar);
+    primeiroInvalido = primeiroInvalido || campoTel;
+  } else {
+    limparErroCampo(liTel);
+  }
+
+  // Especialização: combobox custom -> #especializacaoValor. Com "Outro" ativo,
+  // o valor válido é o texto do campo livre (o erro aparece nesse <li>).
+  var liCombo = comboBtn ? comboBtn.closest('li') : null;
+  if (comboValor && comboValor.value.trim() === '') {
+    if (outroAtivo) {
+      marcarErroCampo(liOutro, reanimar);
+      primeiroInvalido = primeiroInvalido || campoOutro;
+    } else {
+      marcarErroCampo(liCombo, reanimar);
+      primeiroInvalido = primeiroInvalido || comboBtn;
+    }
+  } else {
+    limparErroCampo(liCombo);
+    limparErroCampo(liOutro);
+  }
+
+  if (primeiroInvalido) {
+    var reduzir = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    primeiroInvalido.scrollIntoView({ behavior: reduzir ? 'auto' : 'smooth', block: 'center' });
+    primeiroInvalido.focus({ preventScroll: true });
+    return false;
+  }
+  return true;
+}
+
+// assim que a pessoa começa a preencher um campo, o erro dele some sozinho
+function limparErroAoDigitar(campo) {
+  if (!campo) return;
+  campo.addEventListener('input', function () {
+    if (campo.value.trim() !== '') limparErroCampo(campo.closest('li'));
+  });
 }
 
 if (campoEmail) {
-  // assim que a pessoa corrige o e-mail, o erro some sozinho
+  // e-mail tem regra própria: só limpa quando o formato fica válido
   campoEmail.addEventListener('input', function () {
     if (liEmail.classList.contains('has-error') && emailPareceValido(campoEmail.value)) {
       limparErroEmail();
     }
   });
 }
+limparErroAoDigitar(document.getElementById('campoNome'));
+limparErroAoDigitar(document.getElementById('campoTelefone'));
+limparErroAoDigitar(document.getElementById('especializacao-outro'));
 
 // ---------- ENVIO DOS DADOS DO FORMULÁRIO PARA A API ----------
 // Recebe os dados coletados do formulário e faz o envio para a API.
@@ -403,12 +480,12 @@ async function sendForm(data, callback) {
 function enviado(event) {
   if (event && typeof event.preventDefault === 'function') event.preventDefault();
 
-  // e-mail precisa ser válido; se não for, marca o campo e não abre a confirmação
-  if (!validarEmailFormulario()) return;
+  // todos os campos são obrigatórios; se algum estiver inválido, marca e não
+  // abre a confirmação
+  if (!validarFormulario()) return;
 
   // coleta os dados do formulário e dispara o envio para a API
-  var formElement = document.querySelector('form');
-  var campoNome = formElement ? formElement.querySelector('input[type="text"].formField') : null;
+  var campoNome = document.getElementById('campoNome');
   var campoTel = document.getElementById('campoTelefone');
   var campoEspec = document.getElementById('especializacaoValor');
   var dadosFormulario = {

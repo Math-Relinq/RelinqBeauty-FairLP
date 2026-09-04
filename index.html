@@ -158,13 +158,19 @@
         <form action="" aria-labelledby="form-title">
           <h3 class="form-title" id="form-title">Leva menos de um minuto pra preencher. <span>Sem compromisso.</span></h3>
           <ul class="form">
-            <li><input type="text" placeholder="Nome" class="formField"></li>
             <li>
-              <input type="email" placeholder="Email" class="formField" id="campoEmail" autocomplete="email" aria-describedby="erroEmail">
+              <input type="text" placeholder="Nome" class="formField" id="campoNome" autocomplete="name" aria-describedby="erroNome" required>
+              <p class="formError" id="erroNome" role="alert">Conta pra gente o seu nome.</p>
+            </li>
+            <li>
+              <input type="email" placeholder="Email" class="formField" id="campoEmail" autocomplete="email" aria-describedby="erroEmail" required>
               <p class="formError" id="erroEmail" role="alert">Digite um e-mail válido pra gente conseguir te responder.</p>
             </li>
-            <li><input type="tel" inputmode="tel" autocomplete="tel" maxlength="16" placeholder="Telefone (+55)" class="formField" id="campoTelefone"></li>
             <li>
+              <input type="tel" inputmode="tel" autocomplete="tel" maxlength="16" placeholder="Telefone (+55)" class="formField" id="campoTelefone" aria-describedby="erroTelefone" required>
+              <p class="formError" id="erroTelefone" role="alert">Deixa um telefone pra gente entrar em contato.</p>
+            </li>
+            <li>    
               <div class="combo" id="especializacaoCombo">
                 <button type="button" class="formField formSelect is-placeholder" id="especializacao"
                         aria-haspopup="listbox" aria-expanded="false"
@@ -185,9 +191,11 @@
                 </ul>
                 <input type="hidden" name="especializacao" id="especializacaoValor">
               </div>
+              <p class="formError" id="erroEspecializacao" role="alert">Escolha a sua especialização.</p>
             </li>
             <li class="especializacao-outro" hidden>
               <input type="text" placeholder="Conta pra gente: qual a sua área?" class="formField" id="especializacao-outro" aria-label="Descreva a sua especialização">
+              <p class="formError" id="erroEspecializacaoOutro" role="alert">Conta pra gente qual é a sua área.</p>
             </li>
           </ul>
           

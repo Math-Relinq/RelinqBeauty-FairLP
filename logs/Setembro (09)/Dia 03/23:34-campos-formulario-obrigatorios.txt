@@ -1,0 +1,53 @@
+Campos do formulário agora são todos obrigatórios
+==================================================
+
+Contexto / causa do bug
+-----------------------
+O atributo `required` no HTML não bloqueava o envio porque o botão é
+<button type="submit" onclick="enviado(event)"> e a primeira linha de
+enviado() chama event.preventDefault(), cancelando a validação nativa do
+browser (que roda depois do clique). Além disso a especialização é um
+combobox custom (<button> + <ul> + <input type="hidden">), e `required`
+em input hidden é ignorado pela spec.
+
+Solução: estender a validação em JS (mesma que já existia só pro e-mail)
+para todos os campos, reaproveitando o visual .has-error / .is-retry.
+
+Alterações
+----------
+index.html
+- Nome: id="campoNome", autocomplete="name", aria-describedby + <p class="formError"> "Conta pra gente o seu nome."
+- Telefone: aria-describedby + <p class="formError"> "Deixa um telefone pra gente entrar em contato."
+- Especialização (combo): <p class="formError"> "Escolha a sua especialização."
+- Especialização "Outro": <p class="formError"> "Conta pra gente qual é a sua área."
+  (mensagens começam colapsadas: max-height:0/opacity:0 — sem mudança visual no estado normal)
+
+script.js
+- Removida a função validarEmailFormulario(); no lugar:
+  * marcarErroCampo(li, reanimar) / limparErroCampo(li) — helpers do estado de erro
+  * validarFormulario() — valida nome, e-mail (regex de antes), telefone e
+    especialização; marca cada <li> inválido, rola até o primeiro campo
+    inválido e foca nele; retorna true/false. Com "Outro" ativo, exige o
+    texto do campo livre e mostra o erro nesse <li>.
+  * limparErroAoDigitar(campo) — limpa o erro do campo assim que a pessoa
+    começa a digitar (nome, telefone e especializacao-outro). E-mail mantém
+    regra própria (só limpa quando o formato fica válido).
+- enviado(): passou a chamar validarFormulario() em vez de validarEmailFormulario();
+  coleta do nome agora via getElementById('campoNome').
+- combobox choose(): ao escolher uma opção, remove has-error/is-retry do <li>
+  do combo (e do <li> "Outro" quando a opção não é "Outro").
+
+Testes
+------
+- node -c script.js: OK (sintaxe).
+- Screenshots (google-chrome headless) em 1280x900 e 390x844:
+  * Estado normal: sem alteração visual.
+  * Submit com tudo vazio: os 4 campos ficam com contorno vermelho + mensagem,
+    a tela rola até o campo Nome. Confirmado desktop e mobile.
+  * Nome+e-mail+telefone preenchidos + opção do combo escolhida: submit passa
+    e abre o modal "Parabéns...". Confirmado mobile.
+
+Observação (não alterado)
+-------------------------
+sendForm() continua um stub (TODO da chamada à API). O modal de confirmação
+ainda abre antes da resposta da API — comportamento atual mantido.
