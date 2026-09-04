@@ -200,134 +200,6 @@
     });
   }
 
-  // ---------- FORMULÁRIO: combobox de especialização (janela translúcida) ----------
-  // <select> nativo não deixa a lista aberta ficar translúcida, então montamos
-  // um listbox próprio: botão + <ul role="listbox"> com opções.
-  var comboBtn = document.getElementById('especializacao');
-  var comboList = document.getElementById('especializacaoList');
-  var comboValor = document.getElementById('especializacaoValor');
-  var comboLabel = comboBtn ? comboBtn.querySelector('.comboValue') : null;
-  var especOutroWrap = document.querySelector('.especializacao-outro');
-  var especOutroInput = document.getElementById('especializacao-outro');
-
-  if (comboBtn && comboList && comboValor && comboLabel) {
-    var combo = comboBtn.closest('.combo');
-    var options = Array.prototype.slice.call(comboList.querySelectorAll('.comboOption'));
-    var activeIndex = -1;
-
-    function isOpen() {
-      return !comboList.hidden;
-    }
-
-    function setActive(i) {
-      if (activeIndex >= 0 && options[activeIndex]) options[activeIndex].classList.remove('is-active');
-      activeIndex = i;
-      if (i >= 0 && options[i]) {
-        options[i].classList.add('is-active');
-        options[i].scrollIntoView({ block: 'nearest' });
-        comboList.setAttribute('aria-activedescendant', options[i].id || '');
-      } else {
-        comboList.removeAttribute('aria-activedescendant');
-      }
-    }
-
-    function openList() {
-      if (isOpen()) return;
-      comboList.classList.remove('comboList--up');
-      comboList.hidden = false;
-      if (combo) combo.classList.add('is-open');
-      comboBtn.setAttribute('aria-expanded', 'true');
-      // se não couber abaixo, abre pra cima
-      var rect = comboList.getBoundingClientRect();
-      if (rect.bottom > window.innerHeight - 8 && comboBtn.getBoundingClientRect().top > rect.height) {
-        comboList.classList.add('comboList--up');
-      }
-      var sel = options.findIndex(function (o) { return o.getAttribute('aria-selected') === 'true'; });
-      setActive(sel >= 0 ? sel : 0);
-      comboList.focus();
-      document.addEventListener('click', onDocClick, true);
-    }
-
-    function closeList(focusBtn) {
-      if (!isOpen()) return;
-      comboList.hidden = true;
-      if (combo) combo.classList.remove('is-open');
-      comboBtn.setAttribute('aria-expanded', 'false');
-      setActive(-1);
-      document.removeEventListener('click', onDocClick, true);
-      if (focusBtn) comboBtn.focus();
-    }
-
-    function choose(opt) {
-      options.forEach(function (o) { o.setAttribute('aria-selected', String(o === opt)); });
-      comboLabel.textContent = opt.textContent;
-      comboBtn.classList.remove('is-placeholder');
-
-      // "Outro": o valor da especialização passa a ser o texto que a pessoa
-      // digitar no campo livre (fica gravado na mesma variável das outras opções).
-      var isOutro = opt.getAttribute('data-value') === 'outro';
-      if (especOutroWrap) especOutroWrap.hidden = !isOutro;
-      if (especOutroInput && !isOutro) especOutroInput.value = '';
-      if (isOutro) {
-        comboValor.value = especOutroInput ? especOutroInput.value.trim() : '';
-      } else {
-        comboValor.value = opt.getAttribute('data-value');
-      }
-
-      // escolher uma opção já resolve o erro de "campo obrigatório" do combo
-      var liCombo = comboBtn.closest('li');
-      if (liCombo) liCombo.classList.remove('has-error', 'is-retry');
-      if (!isOutro && especOutroWrap) especOutroWrap.classList.remove('has-error', 'is-retry');
-
-      closeList(true);
-      if (isOutro && especOutroInput) especOutroInput.focus();
-    }
-
-    function onDocClick(e) {
-      if (!comboList.contains(e.target) && e.target !== comboBtn) closeList(false);
-    }
-
-    comboBtn.addEventListener('click', function () {
-      if (isOpen()) closeList(false); else openList();
-    });
-
-    comboBtn.addEventListener('keydown', function (e) {
-      if (e.key === 'ArrowDown' || e.key === 'ArrowUp' || e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        if (!isOpen()) openList();
-        else if (e.key === 'Enter' || e.key === ' ') choose(options[activeIndex] || options[0]);
-        else setActive(Math.min(options.length - 1, Math.max(0, activeIndex + (e.key === 'ArrowDown' ? 1 : -1))));
-      } else if (e.key === 'Escape' && isOpen()) {
-        e.preventDefault();
-        closeList(true);
-      }
-    });
-
-    comboList.addEventListener('keydown', function (e) {
-      if (e.key === 'ArrowDown') { e.preventDefault(); setActive(Math.min(options.length - 1, activeIndex + 1)); }
-      else if (e.key === 'ArrowUp') { e.preventDefault(); setActive(Math.max(0, activeIndex - 1)); }
-      else if (e.key === 'Home') { e.preventDefault(); setActive(0); }
-      else if (e.key === 'End') { e.preventDefault(); setActive(options.length - 1); }
-      else if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); if (options[activeIndex]) choose(options[activeIndex]); }
-      else if (e.key === 'Escape' || e.key === 'Tab') { closeList(e.key === 'Escape'); }
-    });
-
-    options.forEach(function (opt, i) {
-      if (!opt.id) opt.id = 'especOpt-' + i;
-      opt.addEventListener('click', function () { choose(opt); });
-      opt.addEventListener('mouseenter', function () { setActive(i); });
-    });
-
-    // enquanto "Outro" estiver ativo, o texto digitado vai direto pra mesma
-    // variável usada pelas demais opções (#especializacaoValor)
-    if (especOutroInput) {
-      especOutroInput.addEventListener('input', function () {
-        if (especOutroWrap && !especOutroWrap.hidden) {
-          comboValor.value = especOutroInput.value.trim();
-        }
-      });
-    }
-  }
 })();
 
 // ---------- BARRA DE ROLAGEM: só visível enquanto a página é rolada ----------
@@ -393,7 +265,7 @@ function limparErroCampo(li) {
   if (li) li.classList.remove('has-error', 'is-retry');
 }
 
-// Valida TODOS os campos obrigatórios (nome, Instagram, telefone e especialização).
+// Valida TODOS os campos obrigatórios (nome, Instagram, telefone e email).
 // Marca cada campo inválido, rola a tela até o primeiro deles e foca nele.
 // Devolve true/false pro fluxo de envio saber se pode seguir.
 function validarFormulario() {
@@ -402,11 +274,6 @@ function validarFormulario() {
 
   var campoNome = document.getElementById('campoNome');
   var campoTel = document.getElementById('campoTelefone');
-  var comboBtn = document.getElementById('especializacao');
-  var comboValor = document.getElementById('especializacaoValor');
-  var liOutro = document.querySelector('.especializacao-outro');
-  var campoOutro = document.getElementById('especializacao-outro');
-  var outroAtivo = !!(liOutro && !liOutro.hidden);
 
   // se já existe erro na tela, os campos ainda inválidos ganham o pulso extra
   var reanimar = !!document.querySelector('.closing .form li.has-error');
@@ -450,22 +317,6 @@ function validarFormulario() {
     }
   }
 
-  // Especialização: combobox custom -> #especializacaoValor. Com "Outro" ativo,
-  // o valor válido é o texto do campo livre (o erro aparece nesse <li>).
-  var liCombo = comboBtn ? comboBtn.closest('li') : null;
-  if (comboValor && comboValor.value.trim() === '') {
-    if (outroAtivo) {
-      marcarErroCampo(liOutro, reanimar);
-      primeiroInvalido = primeiroInvalido || campoOutro;
-    } else {
-      marcarErroCampo(liCombo, reanimar);
-      primeiroInvalido = primeiroInvalido || comboBtn;
-    }
-  } else {
-    limparErroCampo(liCombo);
-    limparErroCampo(liOutro);
-  }
-
   if (primeiroInvalido) {
     var reduzir = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     primeiroInvalido.scrollIntoView({ behavior: reduzir ? 'auto' : 'smooth', block: 'center' });
@@ -501,17 +352,35 @@ if (campoEmail) {
 }
 limparErroAoDigitar(document.getElementById('campoNome'));
 limparErroAoDigitar(document.getElementById('campoTelefone'));
-limparErroAoDigitar(document.getElementById('especializacao-outro'));
 
 // ---------- ENVIO DOS DADOS DO FORMULÁRIO PARA A API ----------
 // Recebe os dados coletados do formulário e faz o envio para a API.
 // TODO: implementar a chamada à API.
 
 async function sendForm(data, callback) {
-  const jsonFormData = JSON.stringify(data)
-  window.alert(jsonFormData)
-  //envia o json e pega o status de envio
-  callback()
+  const jsonData = JSON.stringify(data);
+  const maxTentativas = 3;
+
+  for (let tentativa = 1; tentativa <= maxTentativas; tentativa++) {
+    try {
+      const response = await fetch('https://app.relinqsales.com.br/api/form/0ae6ff0c', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: jsonData
+      });
+
+      if (response.ok) {
+        return true; // sucesso, encerra a função aqui
+      }
+
+    } catch (err) {
+      console.log(`Tentativa ${tentativa} falhou: ${err.message}`);
+    }
+  }
+
+  return false; // esgotou as 3 tentativas sem sucesso
 }
 
 // ---------- CONFIRMAÇÃO DE ENVIO: retângulo central com fade-in ----------
@@ -525,17 +394,28 @@ async function enviado(event) {
   // coleta os dados do formulário e dispara o envio para a API
   var campoNome = document.getElementById('campoNome');
   var campoTel = document.getElementById('campoTelefone');
-  // var campoEspec = document.getElementById('especializacaoValor'); // especialização desativada por enquanto
-  var dadosFormulario = {
-    name: campoNome ? campoNome.value.trim() : '',
-    email: campoEmail ? campoEmail.value.trim() : '',
-    instagram: campoInstagram ? '@' + instagramHandle(campoInstagram.value) : '',
-    phoneNumber: campoTel ? campoTel.value.trim() : '',
-    // especializacao: campoEspec ? campoEspec.value : '', // especialização desativada por enquanto
-  };
-  await sendForm(dadosFormulario, (res) => {
-    //recebe o status do envio da sendForm, e se for erro exibe um window.alert() e recarrega a pagina
-  });
+
+  //payload da requisição
+  const req = {
+    "source": "LP Relinq Beauty Fair",
+    "utm": {
+      "utm_source": "landing",
+      "utm_medium": "cpc",
+      "utm_campaign": "beauty"
+    },
+    "fields": {
+      "lead": {
+        "name": campoNome ? campoNome.value.trim() : '',
+        "phoneNumber": campoTel?.value.trim() ? '55' + campoTel.value.replace(/\D/g, '') : '',
+        "email": campoEmail ? campoEmail.value.trim() : ''
+      },
+      "cardCustomField": {
+        "85d6c758-94e3-4752-b5e1-d87253fb850d": campoInstagram ? '@' + instagramHandle(campoInstagram.value) : ''
+      }
+    }
+  }
+
+  sendForm(req)
 
   // fecha o teclado virtual caso o envio seja disparado com um campo focado
   var focado = document.activeElement;

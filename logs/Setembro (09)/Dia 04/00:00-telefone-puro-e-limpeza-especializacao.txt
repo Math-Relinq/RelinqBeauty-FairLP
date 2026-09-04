@@ -1,0 +1,22 @@
+Alteração não visual (lógica de dados do formulário).
+
+1. phoneNumber agora é enviado apenas com dígitos puros, sem a máscara visual
+   (11) 91234-5678 do input. Como o placeholder do campo já assume o DDI +55
+   fixo (não digitado pela pessoa), o valor final passou a ser montado como
+   '55' + dígitos do campo, ex.: 5511999998888. Arquivo: script.js, função
+   enviado(), variável dadosFormulario.phoneNumber.
+
+2. Removido em definitivo tudo que restava do antigo campo de especialização
+   (já desativado/comentado desde a remoção anterior do form):
+   - index.html: bloco <!-- ... --> comentado do combobox de especialização
+     e do campo "outro".
+   - style.css: regras .combo, .comboValue, .comboList, .comboOption,
+     .especializacao-outro e o keyframe comboIn (não usadas por mais nada).
+   - script.js: lógica do combobox custom (abrir/fechar lista, seleção,
+     campo "outro"), variáveis comboBtn/comboList/comboValor/especOutro*,
+     validação de especialização em validarFormulario(), chamada de
+     limparErroAoDigitar('especializacao-outro') e a linha comentada
+     "especializacao: campoEspec..." no envio dos dados.
+
+Testes: node --check script.js (sintaxe OK). Sem testes de UI necessários
+(mudança não visual).
