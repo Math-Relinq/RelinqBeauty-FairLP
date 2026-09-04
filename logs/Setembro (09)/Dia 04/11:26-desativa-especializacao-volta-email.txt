@@ -1,0 +1,37 @@
+Alteração: formulário de contato (index.html) e sua lógica (script.js)
+
+O que mudou:
+- Campo "Especialização" (combobox + campo "Outro") oculto do formulário.
+  Não foi removido: ficou comentado em HTML (index.html, dentro de <!-- --> na
+  <ul class="form">) e as referências a ele em script.js (dadosFormulario)
+  também foram comentadas, mantendo o restante da lógica do combo intacta
+  (ela já é protegida por checagens de null, então não quebra com o campo
+  ausente do DOM).
+- Campo "Email" adicionado de volta, no lugar onde a especialização estava
+  (após Telefone). Ordem final dos campos: Nome, Instagram, Telefone, Email.
+- script.js: adicionada validação de email (campoEmail/liEmail,
+  emailPareceValido) seguindo o mesmo padrão usado pra Instagram, com
+  limpeza de erro ao digitar. Objeto dadosFormulario passou a incluir
+  "email" e não envia mais "especializacao" (comentado, não removido).
+
+Campos coletados agora: nome, email, telefone, instagram.
+
+Classificação: alteração visual (formulário) + lógica (validação/JSON).
+
+Testes:
+- Servidor estático local (python3 -m http.server) + Playwright/Chromium
+  headless (instalado via npx playwright install chromium, sem --with-deps
+  por falta de sudo no ambiente).
+- Prints da seção #formulario em desktop (1440x900) e mobile (390x844):
+  campos Nome/Instagram/Telefone/Email visíveis, especialização ausente,
+  layout e espaçamento consistentes com o restante do form (nenhum CSS
+  dependia de nth-child/contagem de campos, então não houve quebra).
+- Preenchimento e submit do formulário via script: modal de confirmação
+  (.enviado-overlay.is-visible) abriu normalmente, sem erros no console.
+- JSON gerado no envio (capturado do window.alert):
+  {"nome":"Teste","email":"teste@teste.com","instagram":"@teste","telefone":"(11) 98765-4321"}
+  -> confirma que "especializacao" não é mais enviado.
+
+Pendências:
+- Decisão final se a especialização volta ao formulário ou é removida em
+  definitivo (por ora fica comentada no código, aguardando confirmação).

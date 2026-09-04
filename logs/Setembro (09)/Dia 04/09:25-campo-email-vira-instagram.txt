@@ -1,0 +1,48 @@
+Campo de e-mail trocado por Instagram
+=====================================
+
+Pedido: no formulário, pedir o Instagram no lugar do e-mail.
+
+index.html
+----------
+- Campo <input type="email" id="campoEmail"> -> <input type="text" id="campoInstagram">
+  com autocomplete/autocapitalize/autocorrect="off" e spellcheck="false"
+  (handle não deve ser autocorrigido). placeholder "Instagram @" (ajustado
+  depois pelo autor). aria-describedby="erroInstagram".
+- Mensagem de erro: "Digite o @ do seu Instagram pra gente te achar."
+  (<p class="formError" id="erroInstagram">)
+
+script.js
+---------
+- campoEmail/liEmail -> campoInstagram/liInstagram.
+- emailPareceValido() removido. Novos helpers:
+  * instagramHandle(valor): normaliza a entrada removendo "http(s)://",
+    "www.instagram.com/", querystring/hash e o "@" inicial.
+  * instagramPareceValido(valor): testa o handle normalizado contra
+    /^[A-Za-z0-9._]{1,30}$/ (regras de username do Instagram).
+- limparErroEmail() -> limparErroInstagram().
+- validarFormulario(): bloco do e-mail virou bloco do Instagram, usando
+  instagramPareceValido(). Continua sendo o 2º campo validado.
+- Listener de input dedicado: só limpa o erro quando o formato fica válido
+  (igual era no e-mail).
+- Payload em enviado(): chave "email" -> "instagram", valor normalizado
+  para "@" + instagramHandle(...).
+
+Aceita: "@perfil", "perfil", "instagram.com/perfil", URL completa.
+Rejeita: vazio, só "@", espaços, e-mail, > 30 caracteres.
+
+Testes
+------
+- node -c script.js: OK.
+- instagramPareceValido() rodado com 10 entradas (ver acima): resultados
+  corretos.
+- Screenshots google-chrome headless (1280x900 e 390x844):
+  * Submit vazio: os 4 campos ficam vermelhos com mensagem; o campo de
+    Instagram mostra o novo texto e placeholder. OK desktop e mobile.
+  * Instagram inválido ("nao é um @ valido"): campo marcado, submit barrado.
+  * Nome + "@ana.makes" + telefone + opção do combo: submit passa e abre o
+    modal "Parabéns...". OK mobile.
+
+Observação (não alterado)
+-------------------------
+sendForm() segue stub (TODO da API). O modal ainda abre antes da resposta.

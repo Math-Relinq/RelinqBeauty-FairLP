@@ -345,16 +345,34 @@
   }, { passive: true });
 })();
 
-// ---------- FORMULÁRIO: validação do e-mail ----------
+// ---------- FORMULÁRIO: validação do Instagram ----------
+var campoInstagram = document.getElementById('campoInstagram');
+var liInstagram = campoInstagram ? campoInstagram.closest('li') : null;
+
+// Aceita "@perfil", "perfil" ou uma URL do tipo instagram.com/perfil.
+// Handle do Instagram: 1 a 30 caracteres, letras, números, ponto e underline.
+function instagramHandle(valor) {
+  return String(valor).trim()
+    .replace(/^https?:\/\//i, '')
+    .replace(/^(www\.)?instagram\.com\//i, '')
+    .replace(/[/?#].*$/, '')
+    .replace(/^@/, '');
+}
+
+function instagramPareceValido(valor) {
+  return /^[A-Za-z0-9._]{1,30}$/.test(instagramHandle(valor));
+}
+
+function limparErroInstagram() {
+  if (liInstagram) liInstagram.classList.remove('has-error', 'is-retry');
+}
+
+// ---------- FORMULÁRIO: validação do Email ----------
 var campoEmail = document.getElementById('campoEmail');
 var liEmail = campoEmail ? campoEmail.closest('li') : null;
 
 function emailPareceValido(valor) {
-  return /^[^\s@]+@[^\s@.]+\.[^\s@]+$/.test(String(valor).trim());
-}
-
-function limparErroEmail() {
-  if (liEmail) liEmail.classList.remove('has-error', 'is-retry');
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(valor).trim());
 }
 
 // Marca um <li> com .has-error (deixa o campo vermelho e abre o espaço com a
@@ -375,7 +393,7 @@ function limparErroCampo(li) {
   if (li) li.classList.remove('has-error', 'is-retry');
 }
 
-// Valida TODOS os campos obrigatórios (nome, e-mail, telefone e especialização).
+// Valida TODOS os campos obrigatórios (nome, Instagram, telefone e especialização).
 // Marca cada campo inválido, rola a tela até o primeiro deles e foca nele.
 // Devolve true/false pro fluxo de envio saber se pode seguir.
 function validarFormulario() {
@@ -403,13 +421,13 @@ function validarFormulario() {
     limparErroCampo(liNome);
   }
 
-  // E-mail (mesma regra de formato de antes)
-  if (campoEmail && liEmail) {
-    if (emailPareceValido(campoEmail.value)) {
-      limparErroEmail();
+  // Instagram (aceita @perfil, perfil ou URL do instagram.com)
+  if (campoInstagram && liInstagram) {
+    if (instagramPareceValido(campoInstagram.value)) {
+      limparErroInstagram();
     } else {
-      marcarErroCampo(liEmail, reanimar);
-      primeiroInvalido = primeiroInvalido || campoEmail;
+      marcarErroCampo(liInstagram, reanimar);
+      primeiroInvalido = primeiroInvalido || campoInstagram;
     }
   }
 
@@ -420,6 +438,16 @@ function validarFormulario() {
     primeiroInvalido = primeiroInvalido || campoTel;
   } else {
     limparErroCampo(liTel);
+  }
+
+  // Email
+  if (campoEmail && liEmail) {
+    if (emailPareceValido(campoEmail.value)) {
+      limparErroCampo(liEmail);
+    } else {
+      marcarErroCampo(liEmail, reanimar);
+      primeiroInvalido = primeiroInvalido || campoEmail;
+    }
   }
 
   // Especialização: combobox custom -> #especializacaoValor. Com "Outro" ativo,
@@ -455,11 +483,19 @@ function limparErroAoDigitar(campo) {
   });
 }
 
+if (campoInstagram) {
+  // Instagram tem regra própria: só limpa quando o formato fica válido
+  campoInstagram.addEventListener('input', function () {
+    if (liInstagram.classList.contains('has-error') && instagramPareceValido(campoInstagram.value)) {
+      limparErroInstagram();
+    }
+  });
+}
 if (campoEmail) {
-  // e-mail tem regra própria: só limpa quando o formato fica válido
+  // Email tem regra própria: só limpa quando o formato fica válido
   campoEmail.addEventListener('input', function () {
     if (liEmail.classList.contains('has-error') && emailPareceValido(campoEmail.value)) {
-      limparErroEmail();
+      limparErroCampo(liEmail);
     }
   });
 }
@@ -470,14 +506,16 @@ limparErroAoDigitar(document.getElementById('especializacao-outro'));
 // ---------- ENVIO DOS DADOS DO FORMULÁRIO PARA A API ----------
 // Recebe os dados coletados do formulário e faz o envio para a API.
 // TODO: implementar a chamada à API.
+
 async function sendForm(data, callback) {
   const jsonFormData = JSON.stringify(data)
+  window.alert(jsonFormData)
   //envia o json e pega o status de envio
-  //chama callback repassando status de envio
+  callback()
 }
 
 // ---------- CONFIRMAÇÃO DE ENVIO: retângulo central com fade-in ----------
-function enviado(event) {
+async function enviado(event) {
   if (event && typeof event.preventDefault === 'function') event.preventDefault();
 
   // todos os campos são obrigatórios; se algum estiver inválido, marca e não
@@ -487,14 +525,15 @@ function enviado(event) {
   // coleta os dados do formulário e dispara o envio para a API
   var campoNome = document.getElementById('campoNome');
   var campoTel = document.getElementById('campoTelefone');
-  var campoEspec = document.getElementById('especializacaoValor');
+  // var campoEspec = document.getElementById('especializacaoValor'); // especialização desativada por enquanto
   var dadosFormulario = {
-    nome: campoNome ? campoNome.value.trim() : '',
+    name: campoNome ? campoNome.value.trim() : '',
     email: campoEmail ? campoEmail.value.trim() : '',
-    telefone: campoTel ? campoTel.value.trim() : '',
-    especializacao: campoEspec ? campoEspec.value : '',
+    instagram: campoInstagram ? '@' + instagramHandle(campoInstagram.value) : '',
+    phoneNumber: campoTel ? campoTel.value.trim() : '',
+    // especializacao: campoEspec ? campoEspec.value : '', // especialização desativada por enquanto
   };
-  sendForm(dadosFormulario, (res) => {
+  await sendForm(dadosFormulario, (res) => {
     //recebe o status do envio da sendForm, e se for erro exibe um window.alert() e recarrega a pagina
   });
 

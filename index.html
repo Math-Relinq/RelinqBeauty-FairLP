@@ -163,14 +163,20 @@
               <p class="formError" id="erroNome" role="alert">Conta pra gente o seu nome.</p>
             </li>
             <li>
-              <input type="email" placeholder="Email" class="formField" id="campoEmail" autocomplete="email" aria-describedby="erroEmail" required>
-              <p class="formError" id="erroEmail" role="alert">Digite um e-mail válido pra gente conseguir te responder.</p>
+              <input type="text" inputmode="text" placeholder="Instagram (@)" class="formField" id="campoInstagram" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" aria-describedby="erroInstagram" required>
+              <p class="formError" id="erroInstagram" role="alert">Digite o @ do seu Instagram pra gente te achar.</p>
             </li>
             <li>
               <input type="tel" inputmode="tel" autocomplete="tel" maxlength="16" placeholder="Telefone (+55)" class="formField" id="campoTelefone" aria-describedby="erroTelefone" required>
               <p class="formError" id="erroTelefone" role="alert">Deixa um telefone pra gente entrar em contato.</p>
             </li>
-            <li>    
+            <li>
+              <input type="email" placeholder="Email" class="formField" id="campoEmail" autocomplete="email" aria-describedby="erroEmail" required>
+              <p class="formError" id="erroEmail" role="alert">Digite um e-mail válido pra gente conseguir te responder.</p>
+            </li>
+            <!-- Especialização desativada por enquanto (ainda em decisão se volta pro formulário) -->
+            <!--
+            <li>
               <div class="combo" id="especializacaoCombo">
                 <button type="button" class="formField formSelect is-placeholder" id="especializacao"
                         aria-haspopup="listbox" aria-expanded="false"
@@ -197,8 +203,8 @@
               <input type="text" placeholder="Conta pra gente: qual a sua área?" class="formField" id="especializacao-outro" aria-label="Descreva a sua especialização">
               <p class="formError" id="erroEspecializacaoOutro" role="alert">Conta pra gente qual é a sua área.</p>
             </li>
+            -->
           </ul>
-          
           <button class="formBtn" type="submit" onclick="enviado(event)">Dar um UP no meu negocio</button>
         </form>
       </section>
